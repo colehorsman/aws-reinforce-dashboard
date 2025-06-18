@@ -1,3 +1,18 @@
+# AWS re:Inforce 2025 Talk Summaries
+
+This repository contains detailed summaries and analysis of AWS re:Inforce 2025 security conference talks. Each talk has been processed with full transcripts, key points, technical details, and comprehensive summaries to help security professionals quickly identify the most valuable content for their needs.
+
+## What's Included
+
+- **Full Talk Summaries**: Complete analysis of 20+ AWS re:Inforce 2025 presentations
+- **Technical Implementation Details**: Concrete guidance, code examples, and actionable steps from each talk  
+- **Video Links**: Direct access to original presentations on YouTube
+- **Curated Top 10 Ranking**: Data-driven ranking based on practical applicability and technical depth
+
+*Last updated: June 18th, 2025 at 2:52pm MDT*
+
+---
+
 # Top 10 AWS re:Inforce 2025 Talks Ranked by Practical Applicability & Technical Implementation Depth
 
 This ranking evaluates AWS re:Inforce 2025 talks based on:
