@@ -10,36 +10,39 @@
 - **Video ID:** 69SnyaPk9ek
 
 ## Summary
-The presentation focuses on Splunk's integration capabilities with AWS Security Lake and S3, particularly around data routing and management. The speaker, Colin Gibbons from Splunk's product management team, discusses how organizations can optimize their security data storage and analysis costs by intelligently routing different types of security data to appropriate destinations.
-The key emphasis is on handling high-volume, low-fidelity security data (like VPC flow logs and firewall logs) more cost-effectively by storing them in AWS Security Lake or S3 while maintaining the ability to search and analyze this data when needed. The presentation introduces Splunk's Edge Processor and Ingest Processor tools that enable sophisticated data routing, transformation, and management capabilities.
+This AWS re:Inforce 2025 session (TDR222) presents Splunk's comprehensive data routing strategy for Amazon Security Lake and S3, addressing the critical challenge of balancing security data visibility with storage costs. Delivered by Colin Gibbons from Splunk's product management team, the presentation tackles the reality that customers primarily complain about Splunk's cost rather than its technology, particularly when handling high-volume, low-fidelity security data such as VPC flow logs, WAF logs, and firewall data.
+
+The session introduces a sophisticated data pipeline architecture using Splunk's Edge Processor and Ingest Processor tools, which enable intelligent routing of security data based on value and use case requirements. The core strategy involves storing high-volume, low-signal data in cost-effective alternatives like AWS Security Lake or S3 while maintaining full search and analysis capabilities through Federated Analytics. This approach allows organizations to significantly reduce Splunk storage costs while preserving investigative capabilities for compliance, troubleshooting, and security operations.
+
+A key technical advancement presented is the evolution from SPL (Splunk Processing Language) to SPL 2, transforming from a query language to a full scripting language that enables sophisticated data transformation, masking, and enrichment without requiring manual configuration of props and transforms files. The presentation demonstrates how organizations can implement tiered data strategies with real-time detections running against frequently accessed data in Splunk while maintaining access to historical data through federated search capabilities in Security Lake and S3.
 
 ## Key Points
-- Customers primarily struggle with Splunk's cost rather than technology, especially when dealing with high-volume security data
-- Not all security data needs to be stored in Splunk - high volume, low fidelity data can be stored in cheaper alternatives like AWS Security Lake
-- Federated Analytics allows searching data in Amazon Security Lake/S3 and pulling specific data back into Splunk for detection
-- Edge Processor provides flexible data pipeline management with SPL 2 scripting capabilities
-- Multiple options exist for data routing and transformation, including masking sensitive data and filtering
-- Cloud-managed Ingest Processor offers hosted data management without requiring on-premises infrastructure
+- Customer cost concerns drive need for intelligent data routing rather than storing all security data in expensive Splunk indexes
+- High-volume, low-fidelity data (VPC flows, WAF logs, firewall data) can be cost-effectively stored in AWS Security Lake or S3
+- Federated Analytics provides dual capabilities: federated search for ad-hoc investigations and Data Lake Index for frequent detections
+- Edge Processor and Ingest Processor offer on-premises and cloud-managed data pipeline solutions respectively
+- SPL 2 evolution enables sophisticated scripting, transformation, and enrichment without manual configuration file editing
+- Data masking capabilities support PII/PHI compliance requirements for healthcare and regulated industries
+- Cisco Live customer feedback drives firewall and network device data routing use cases
+- OCSF (Open Cybersecurity Schema Framework) pipeline support enables schema standardization across security tools
+- Federated search uses Amazon Athena with data scan unit pricing for cost-effective historical analysis
+- Enterprise Security detections can run against Data Lake Index data without expensive Athena queries
 
 ## Technical Details
-- AWS Services:
-  - Amazon Security Lake
-  - Amazon S3
-  - VPC Flow Logs
-  - AWS WAF
-- Splunk Components:
-  - Edge Processor (Linux RPM-based tool)
-  - Ingest Processor (cloud-managed version)
-  - SPL 2 (Splunk Processing Language 2)
-  - Federated Analytics capability
-  - Heavy Forwarders
-  - HTTP Event Collector (HEC)
-- Integration Features:
-  - Data transformation and mapping to Common Information Model
-  - Data filtering and masking capabilities
-  - Cloud management plane for Edge Processor nodes
-  - Federated search functionality for S3 data
-  - Data routing rules and pipeline management
+- **Edge Processor Architecture**: Linux RPM-based tool with cloud management plane for distributed deployment and centralized control
+- **Ingest Processor**: Cloud-managed hosted version eliminating on-premises infrastructure requirements
+- **SPL 2 Capabilities**: Full scripting language supporting data transformation, masking, enrichment, and routing logic
+- **Federated Analytics Components**: Federated search for S3 data and Data Lake Index for Security Lake with 30-day rolling windows
+- **Data Routing Options**: HTTP Event Collector (HEC), Heavy Forwarders, and Syslog input methods with flexible output destinations
+- **Cost Optimization Strategy**: Data Scan Unit (DSU) pricing for Athena-based federated search vs. SVC pricing for Data Lake Index
+- **Security Lake Integration**: SQS subscriber-based data ingestion for VPC Flow Logs, CloudTrail, CloudWatch, and third-party sources
+- **Data Transformation Pipeline**: Common Information Model mapping, field masking, filtering, and enrichment capabilities
+- **Compliance Features**: PII/PHI data masking with role-based access controls for healthcare and regulated industry requirements
+- **OCSF Support**: Schema-on-write pipeline for Open Cybersecurity Schema Framework standardization and vendor interoperability
+- **Management Interface**: Cloud-based UI for pipeline configuration, monitoring, and SPL 2 query development
+- **Integration Ecosystem**: Support for Cisco firewalls, Palo Alto, CrowdStrike, and other security vendor data sources
+- **Storage Tiering**: Intelligent routing between Splunk indexes, S3 buckets, and Security Lake based on data value and access patterns
+- **Query Performance**: Transparent federated search capabilities maintaining user experience while accessing external data sources
 
 ## Full Transcript
 
