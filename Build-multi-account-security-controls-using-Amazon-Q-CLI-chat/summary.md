@@ -12,14 +12,14 @@
 This re:Inforce 2025 session demonstrates how to build multi-account security controls using Amazon Q CLI chat functionality. The presentation covers the integration of Amazon Q's conversational AI capabilities with AWS CLI to streamline security management across multiple AWS accounts. The speaker shows practical examples of using natural language commands to implement security controls, monitor compliance, and automate security tasks across organizational boundaries. Key focus areas include leveraging Amazon Q's understanding of AWS services to translate business security requirements into actionable CLI commands, reducing the complexity of multi-account security management, and improving operational efficiency for security teams.
 
 ## Key Points
-• Amazon Q CLI chat enables natural language interaction for complex multi-account security operations
-• Integration reduces the learning curve for security teams managing AWS environments
-• Conversational interface translates business requirements into specific AWS CLI commands
-• Multi-account security controls can be implemented more efficiently through guided assistance
-• Amazon Q provides contextual awareness of AWS security best practices and service interactions
-• Automation capabilities help maintain consistent security posture across account boundaries
-• Real-time guidance helps prevent misconfigurations during security control deployment
-• The tool supports both interactive troubleshooting and proactive security management
+- Amazon Q CLI chat enables natural language interaction for complex multi-account security operations
+- Integration reduces the learning curve for security teams managing AWS environments
+- Conversational interface translates business requirements into specific AWS CLI commands
+- Multi-account security controls can be implemented more efficiently through guided assistance
+- Amazon Q provides contextual awareness of AWS security best practices and service interactions
+- Automation capabilities help maintain consistent security posture across account boundaries
+- Real-time guidance helps prevent misconfigurations during security control deployment
+- The tool supports both interactive troubleshooting and proactive security management
 
 ## Technical Details
 **Amazon Q CLI Integration:**

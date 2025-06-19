@@ -14,15 +14,15 @@ This AWS re:Inforce 2025 presentation provides a comprehensive guide to building
 The presentation introduces a 7-layer architecture framework for analyzing AI agent resilience: foundation models, agent orchestration, software layer, knowledge base, agent ecosystem, deployment infrastructure, and security/compliance with observability. Using AWS's resilience analysis framework, they demonstrate how to apply five key resilience properties (fault isolation, redundancy, sufficient capacity, timely output, and correct output) across these layers to identify and mitigate potential failure modes that could compromise agent performance.
 
 ## Key Points
-• **AI Agent Definition**: Four core characteristics - reasoning engine, memory (short/long-term), planning capability, and tool integration for external APIs and databases
-• **7-Layer Architecture Framework**: Foundation models, agent orchestration, software layer, knowledge base, agent ecosystem, deployment infrastructure, security/compliance/observability
-• **Five Resilience Properties**: Fault isolation & shared fate, redundancy, sufficient capacity & excessive load management, timely output, and correct output validation
-• **Fault Isolation Techniques**: Implement validation processes to prevent hallucinated outputs from cascading, use circuit breaker patterns for overwhelmed tools, and establish distributed tracing across all layers
-• **Redundancy Strategies**: Leverage Amazon Bedrock's multi-region model deployment, implement automated failover processes with alternate tool routing, and monitor replication lag for knowledge bases
-• **Capacity Management**: Implement automated token quota management, use intelligent request throttling with priority-based allocation, reduce search depth during peak loads, and maintain real-time capacity monitoring
-• **Latency Optimization**: Define clear service level objectives, optimize agent orchestration to reduce rumination steps, implement streaming responses, and use asynchronous processing for independent tools
-• **Output Validation**: Validate input/output against agent scope, leverage deterministic agent flows for predictable tasks, implement performance evaluation at every step, and introduce human-in-the-loop for high-stakes decisions
-• **Operational Excellence**: Apply traditional DevOps practices with AI-specific modifications, including model management capabilities using MLOps and AI-specific observability metrics
+- **AI Agent Definition**: Four core characteristics - reasoning engine, memory (short/long-term), planning capability, and tool integration for external APIs and databases
+- **7-Layer Architecture Framework**: Foundation models, agent orchestration, software layer, knowledge base, agent ecosystem, deployment infrastructure, security/compliance/observability
+- **Five Resilience Properties**: Fault isolation & shared fate, redundancy, sufficient capacity & excessive load management, timely output, and correct output validation
+- **Fault Isolation Techniques**: Implement validation processes to prevent hallucinated outputs from cascading, use circuit breaker patterns for overwhelmed tools, and establish distributed tracing across all layers
+- **Redundancy Strategies**: Leverage Amazon Bedrock's multi-region model deployment, implement automated failover processes with alternate tool routing, and monitor replication lag for knowledge bases
+- **Capacity Management**: Implement automated token quota management, use intelligent request throttling with priority-based allocation, reduce search depth during peak loads, and maintain real-time capacity monitoring
+- **Latency Optimization**: Define clear service level objectives, optimize agent orchestration to reduce rumination steps, implement streaming responses, and use asynchronous processing for independent tools
+- **Output Validation**: Validate input/output against agent scope, leverage deterministic agent flows for predictable tasks, implement performance evaluation at every step, and introduce human-in-the-loop for high-stakes decisions
+- **Operational Excellence**: Apply traditional DevOps practices with AI-specific modifications, including model management capabilities using MLOps and AI-specific observability metrics
 
 ## Technical Details
 **AWS Services & Technologies:**
