@@ -1,6 +1,6 @@
 # AWS re:Inforce 2025 Talk Summaries
 
-*Videos processed: June 18th, 2025 at 2:52pm MDT (we'll keep checking for new uploads)*
+*Videos processed: June 18th, 2025 at 8:45pm MDT (we'll keep checking for new uploads)*
 
 This repository contains detailed summaries and analysis of AWS re:Inforce 2025 security conference talks. Each talk has been processed with full transcripts, key points, technical details, and comprehensive summaries to help security professionals quickly identify the most valuable content for their needs.
 
