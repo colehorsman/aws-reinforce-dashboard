@@ -1,12 +1,12 @@
 # AWS re:Inforce 2025 Talk Summaries
 
-*Videos processed: June 19th, 2025 at 11:00am MDT (we'll keep checking for new uploads)*
+*Videos processed: June 20th, 2025 at 1:15am MDT (we'll keep checking for new uploads)*
 
 This repository contains detailed summaries and analysis of AWS re:Inforce 2025 security conference talks. Each talk has been processed with full transcripts, key points, technical details, and comprehensive summaries to help security professionals quickly identify the most valuable content for their needs.
 
 ## What's Included
 
-- **Full Talk Summaries**: Over 22 hours summarized, across over 80 videos
+- **Full Talk Summaries**: Over 30 hours summarized, across over 120 videos
 - **Technical Implementation Details**: Concrete guidance, examples, services mentioned, and actionable steps from each talk  
 - **Video Links**: Direct access to original presentations on YouTube
 
@@ -33,6 +33,18 @@ If you're working with AI systems and want to implement security best practices:
 - **[Secure remote MCP server deployment for Gen AI on AWS (SEC326)](ai-ml-security/Secure-remote-MCP-server-deployment-for-Gen-AI-on-AWS-SEC326/)** - MCP server security for AI workloads
 - **[Secure your AI applications with Cisco AI Defense on AWS (APS227)](ai-ml-security/Secure-your-AI-applications-with-Cisco-AI-Defense-on-AWS-APS227/)** - Third-party AI security solutions
 - **[Securing generative AI: A baseline in the security landscape (SEC227)](ai-ml-security/Securing-generative-AI-A-baseline-in-the-security-landscape-SEC227/)** - Foundational AI security principles
+- **[Behind the shields: AWS and Anthropic's approach to secure AI (SEC303)](ai-ml-security/Behind-the-shields-AWS-and-Anthropics-approach-to-secure-AI-SEC303/)** - AWS and Anthropic AI security collaboration
+- **[Build verifiable apps using automated reasoning and generative AI (APS401)](ai-ml-security/Build-verifiable-apps-using-automated-reasoning-and-generative-AI-APS401/)** - Automated reasoning for AI application verification
+- **[From possibility to production: A strong flexible foundation for AI security](ai-ml-security/From-possibility-to-production-A-strong-flexible-foundation-for-AI-security/)** - Production AI security frameworks
+- **[GenAI governance in action: Building and validating cloud controls (GRC302)](ai-ml-security/GenAI-governance-in-action-Building-and-validating-cloud-controls-GRC302/)** - AI governance and control validation
+- **[How AWS's global threat intelligence transforms cloud protection (SEC302)](ai-ml-security/How-AWSs-global-threat-intelligence-transforms-cloud-protection-SEC302/)** - AI-powered threat intelligence
+- **[Operationalizing Amazon Security Lake with analytics and generative AI (TDR342)](ai-ml-security/Operationalizing-Amazon-Security-Lake-with-analytics-and-generative-AI-TDR342/)** - AI-enhanced security data analytics
+- **[Secure agentic AI: Mitigate risk in autonomous decision-making systems (NTA126)](ai-ml-security/Secure-agentic-AI-Mitigate-risk-in-autonomous-decision-making-systems-NTA126/)** - Autonomous AI system security
+- **[Supercharge IaC security with AI: From commit to auto-remediation (APS441)](ai-ml-security/Supercharge-IaC-security-with-AI-From-commit-to-auto-remediation-APS441/)** - AI-powered infrastructure security
+- **[The state of cloud and GenAI risks: Uncovering the data with Orca Security](ai-ml-security/The-state-of-cloud-and-GenAI-risks-Uncovering-the-data-with-Orca-Security/)** - Cloud and AI risk analysis
+- **[Transform threat modeling using generative AI (APS222)](ai-ml-security/Transform-threat-modeling-using-generative-AI-APS222/)** - AI-powered threat modeling
+- **[Why vibe coding isn't enough: Building secure AI apps that scale (COM322)](ai-ml-security/Why-vibe-coding-isnt-enough-Building-secure-AI-apps-that-scale-COM322/)** - Scalable AI application security
+- **[Workforce identity for generative AI and analytics (IAM302)](ai-ml-security/Workforce-identity-for-generative-AI-and-analytics-IAM302/)** - Identity management for AI workloads
 
 ### 🏗️ Infrastructure as Code & DevSecOps
 If you're implementing security controls in CI/CD pipelines and infrastructure:
@@ -44,6 +56,17 @@ If you're implementing security controls in CI/CD pipelines and infrastructure:
 - **[Level up your DevSecOps with generative AI (NTA125)](infrastructure-devSecops/Level-up-your-DevSecOps-with-generative-AI-NTA125/)** - AI-powered DevSecOps practices
 - **[Mission-driven DevSecOps: GitLab + AWS GovCloud at CACI (GRC222)](infrastructure-devSecops/Mission-driven-DevSecOps-GitLab-AWS-GovCloud-at-CACI-GRC222/)** - Government DevSecOps implementation
 - **[Threat modeling a batch job framework (COM325)](infrastructure-devSecops/Threat-modeling-a-batch-job-framework-COM325/)** - Security architecture for batch processing
+- **[Accelerating incident response with AWS Security Incident Response (TDR421)](infrastructure-devSecops/Accelerating-incident-response-with-AWS-Security-Incident-Response-TDR421/)** - AWS Security Incident Response service implementation
+- **[Advanced network defense: From basics to global scale with AWS Cloud WAN (NIS305)](infrastructure-devSecops/Advanced-network-defense-From-basics-to-global-scale-with-AWS-Cloud-WANNIS305/)** - Global network security architecture
+- **[Building enterprise-grade AppSec: Lessons from AWS Security (APS201)](infrastructure-devSecops/Building-enterprise-grade-AppSec-Lessons-from-AWS-Security-APS201/)** - Enterprise application security practices
+- **[Building secure development into Amazon Stores (APS221)](infrastructure-devSecops/Building-secure-development-into-Amazon-Stores-APS221/)** - Secure development lifecycle implementation
+- **[Implementing incident response with AWS Well-Architected best practices (COM324)](infrastructure-devSecops/Implementing-incident-response-with-AWS-Well-Architected-best-practices-COM324/)** - Well-Architected incident response framework
+- **[Managing cloud risks at scale with Autodesk & Orca Security (TDR202)](infrastructure-devSecops/Managing-cloud-risks-at-scale-with-Autodesk-Orca-Security-TDR202/)** - Enterprise cloud risk management
+- **[Mission-driven DevSecOps: GitLab + AWS GovCloud at CACI (GRC222)](infrastructure-devSecops/Mission-driven-DevSecOps-GitLab-AWS-GovCloud-at-CACI-GRC222/)** - Government DevSecOps implementation
+- **[Modernizing privacy compliance workflows in AWS (COM221)](infrastructure-devSecops/Modernizing-privacy-compliance-workflows-in-AWS-COM221/)** - Privacy compliance automation
+- **[Move fast, stay secure: Lessons learned from the AWS prototyping team (APS341)](infrastructure-devSecops/Move-fast-stay-secure-Lessons-learned-from-the-AWS-prototyping-team-APS341/)** - Rapid secure development practices
+- **[Scaling AWS threat intelligence to protect customers (TDR304)](infrastructure-devSecops/Scaling-AWS-threat-intelligence-to-protect-customers-TDR304/)** - Threat intelligence integration
+- **[Securing CodeBuild managed runners: Patterns for GitLab & GitHub (APS202)](infrastructure-devSecops/Securing-CodeBuild-managed-runners-Patterns-for-GitLab-GitHub-APS202/)** - CI/CD security patterns
 
 ### 🔐 Identity & Access Management
 If you're working on IAM, authorization, and access controls:
@@ -53,6 +76,11 @@ If you're working on IAM, authorization, and access controls:
 - **[How Mendix revolutionizes access management with a generative AI chatbot (IAM322)](identity-access-management/How-Mendix-revolutionizes-access-management-with-a-generative-AI-chatbotIAM322/)** - AI-powered access management
 - **[No more IAM cleanup: How KKR automated access and permissions at scale (IAM222)](identity-access-management/No-more-IAM-cleanup-How-KKR-automated-access-and-permissions-at-scale-IAM222/)** - Automated IAM management
 - **[Securing app & AI development using 1Password + AWS Secrets Manager (IAM224)](identity-access-management/Securing-app-AI-development-using-1Password-AWS-Secrets-Manager-IAM224/)** - Secrets management integration
+- **[AWS Managed Microsoft AD for enterprise identity (IAM223)](identity-access-management/AWS-Managed-Microsoft-AD-for-enterprise-identity-IAM223/)** - Enterprise Active Directory integration
+- **[Developer freedom using resource control policies featuring Comcast (IAM303)](identity-access-management/Developer-freedom-using-resource-control-policies-featuring-Comcast-IAM303/)** - Resource control policy implementation
+- **[Empowering developers to implement least privilege IAM permissions (IAM304)](identity-access-management/Empowering-developers-to-implement-least-privilege-IAM-permissions-IAM304/)** - Developer-focused IAM best practices
+- **[Establishing a data perimeter on AWS featuring Block Inc (IAM305)](identity-access-management/Establishing-a-data-perimeter-on-AWS-featuring-Block-Inc-IAM305/)** - Data perimeter implementation patterns
+- **[Implement app authorization in minutes with Amazon Verified Permissions (IAM306)](identity-access-management/Implement-app-authorization-in-minutes-with-Amazon-Verified-Permissions-IAM306/)** - Verified Permissions quick implementation
 
 ### 🏢 Multi-Account & Enterprise Security
 If you're managing security across large AWS organizations:
@@ -64,6 +92,14 @@ If you're managing security across large AWS organizations:
 - **[AWS Global Services: Turning security into innovation accelerators (SEC124)](multi-account-enterprise/AWS-Global-Services-Turning-security-into-innovation-accelerators-SEC124/)** - Enterprise security transformation
 - **[Build security monitoring and response at scale (GRC421)](multi-account-enterprise/Build-security-monitoring-and-response-at-scale-GRC421/)** - Scalable security operations
 - **[Code to cloud risk management: From noise to real-time action (GRC226)](multi-account-enterprise/Code-to-cloud-risk-management-From-noise-to-real-time-action-GRC226/)** - Risk management automation
+- **[Avoiding AI risks in your AWS environment (GRC101)](multi-account-enterprise/Avoiding-AI-risks-in-your-AWS-environment-GRC101/)** - AI risk management in enterprise environments
+- **[Best practices for managing governance, risk and compliance globally (GRC301)](multi-account-enterprise/Best-practices-for-managing-governance-risk-and-compliance-globally-GRC301/)** - Global GRC management strategies
+- **[Building sovereign-ready automated controls and evidence processes (GRC201)](multi-account-enterprise/Building-sovereign-ready-automated-controls-and-evidence-processes-GRC201/)** - Sovereign cloud compliance automation
+- **[Empowering critical infrastructure entities through cloud governance (GRC303)](multi-account-enterprise/Empowering-critical-infrastructure-entities-through-cloud-governance-GRC303/)** - Critical infrastructure governance
+- **[Enterprise security at scale: SAP's AWS blueprint (TDR306)](multi-account-enterprise/Enterprise-security-at-scale-SAPs-AWS-blueprint-TDR306/)** - Enterprise security architecture patterns
+- **[How AWS designs the cloud to be the most secure for your business (SEC201)](multi-account-enterprise/How-AWS-designs-the-cloud-to-be-the-most-secure-for-your-business-SEC201/)** - AWS security design principles
+- **[How the AWS obsession with resilience helps customers build for adversity](multi-account-enterprise/How-the-AWS-obsession-with-resilience-helps-customers-build-for-adversity/)** - Resilience and business continuity
+- **[JPMC makes AWS organization more secure by removing thousands of root users](multi-account-enterprise/JPMC-makes-AWS-organization-more-secure-by-removing-thousands-of-root-users/)** - Large-scale root user management
 
 ### 🛡️ Threat Detection & Response
 If you're focused on security monitoring and incident response:
@@ -90,6 +126,10 @@ If you're working on data security and encryption:
 - **[Encrypting data in transit for your Kubernetes applications (DAP341)](data-protection-encryption/Encrypting-data-in-transit-for-your-Kubernetes-applications-DAP341/)** - Kubernetes encryption patterns
 - **[Post-quantum cryptography demystified (DAP222)](data-protection-encryption/Post-quantum-cryptography-demystified-DAP222/)** - Post-quantum cryptography preparation
 - **[Where are your secrets? Monitor keys, secrets and certs usage on AWS](data-protection-encryption/Where-are-your-secrets-Monitor-keys-secrets-and-certs-usage-o/)** - Secrets and certificate monitoring
+- **[Data protection, recovery and resiliency on AWS (DAP325)](data-protection-encryption/Data-protection-recovery-and-resiliency-on-AWS-DAP325/)** - Comprehensive data protection strategies
+- **[Demystifying attestation: Measure and verify your execution environment (DAP442)](data-protection-encryption/Demystifying-attestation-Measure-and-verify-your-execution-environment-DAP442/)** - Execution environment verification
+- **[Fannie Mae's practical path to modern PKI and certificate management (DAP302)](data-protection-encryption/Fannie-Maes-practical-path-to-modern-PKI-and-certificate-management-DAP302/)** - Enterprise PKI modernization
+- **[Veradigm's security-first approach to amplifying potential with GenAI (DAP201)](data-protection-encryption/Veradigms-security-first-approach-to-amplifying-potential-with-GenAI-DAP201/)** - Healthcare AI security implementation
 
 ### 🌐 Network Security & Web Protection  
 If you're securing network infrastructure and web applications:
@@ -98,6 +138,10 @@ If you're securing network infrastructure and web applications:
 - **[Sticky situations: Building advanced AWS WAF honeypots (NTA123)](network-security-web/Sticky-situations-Building-advanced-AWS-WAF-honeypots-for-bet/)** - WAF and honeypot strategies
 - **[A deep dive into Amazon VPC Lattice granular security (NIS341)](network-security-web/A-deep-dive-into-Amazon-VPC-Lattice-granular-security-NIS341/)** - VPC Lattice security architecture
 - **[I didn't know Network Firewall could do that! (NIS322)](network-security-web/I-didnt-know-Network-Firewall-could-do-that-NIS322/)** - Advanced Network Firewall capabilities
+- **[How Itaú Unibanco leverages AWS Shield Advanced to combat DDoS events (NIS302)](network-security-web/How-Itaú-Unibanco-leverages-AWS-Shield-Advanced-to-combat-DDoS-events-NIS302/)** - DDoS protection and Shield Advanced implementation
+- **[Outbound network controls made easy (NIS301)](network-security-web/Outbound-network-controls-made-easy-NIS301/)** - Simplified outbound network security
+- **[Strengthen your network security with AWS Shield (NIS202-NEW)](network-security-web/Strengthen-your-network-security-with-AWS-Shield-NIS202-NEW/)** - AWS Shield security enhancements
+- **[Strengthening network security with AWS Network & DNS Firewall (COM321)](network-security-web/Strengthening-network-security-with-AWS-Network-DNS-Firewall-COM321/)** - Network and DNS firewall integration
 
 ### 👥 Security Culture & Team Management
 If you're building security teams and culture:
@@ -119,6 +163,7 @@ If you're building security teams and culture:
 - **[Technical insights: Expert keynote Q&A (SEC320)](security-culture-teams/Technical-insights-Expert-keynote-QA-SEC320/)** - Expert panel discussions
 - **[Transform security and compliance into your innovation catalyst (SEC327)](security-culture-teams/Transform-security-and-compliance-into-your-innovation-catalyst-SEC327/)** - Security as business enabler
 - **[Transitioning security mindsets: From on-premises to cloud-native security](security-culture-teams/Transitioning-security-mindsets-From-on-premises-to-cloud-native-security/)** - Cloud security transformation
+- **[Building stronger cloud defense with real-world insights (SEC207)](security-culture-teams/Building-stronger-cloud-defense-with-real-world-insights-SEC207/)** - Real-world security defense strategies
 
 ---
 
