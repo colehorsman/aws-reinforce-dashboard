@@ -1,12 +1,12 @@
 # AWS re:Inforce 2025 Talk Summaries
 
-*Videos processed: June 20th, 2025 at 1:15am MDT (we'll keep checking for new uploads)*
+*Videos processed: June 21st, 2025 at 3:45pm MDT (37 new videos added - 163 total videos processed)*
 
 This repository contains detailed summaries and analysis of AWS re:Inforce 2025 security conference talks. Each talk has been processed with full transcripts, key points, technical details, and comprehensive summaries to help security professionals quickly identify the most valuable content for their needs.
 
 ## What's Included
 
-- **Full Talk Summaries**: Over 30 hours summarized, across over 120 videos
+- **Full Talk Summaries**: Over 40 hours summarized, across 163 videos
 - **Technical Implementation Details**: Concrete guidance, examples, services mentioned, and actionable steps from each talk  
 - **Video Links**: Direct access to original presentations on YouTube
 
@@ -45,6 +45,14 @@ If you're working with AI systems and want to implement security best practices:
 - **[Transform threat modeling using generative AI (APS222)](ai-ml-security/Transform-threat-modeling-using-generative-AI-APS222/)** - AI-powered threat modeling
 - **[Why vibe coding isn't enough: Building secure AI apps that scale (COM322)](ai-ml-security/Why-vibe-coding-isnt-enough-Building-secure-AI-apps-that-scale-COM322/)** - Scalable AI application security
 - **[Workforce identity for generative AI and analytics (IAM302)](ai-ml-security/Workforce-identity-for-generative-AI-and-analytics-IAM302/)** - Identity management for AI workloads
+- **[Building trust in Agentic AI through authentication and access control (IAM321)](ai-ml-security/Building-trust-in-Agentic-AI-through-authentication-and-access-control-IAM321/)** - Authentication and access control for AI agents
+- **[Know your data: Building a strategy to address OWASP Top 10 for LLMs (DAP122)](ai-ml-security/Know-your-data-Building-a-strategy-to-address-OWASP-Top-10-for-LLMs-DAP122/)** - LLM security best practices and OWASP Top 10
+- **[Proven techniques to build a trusted software supply chain for AI apps (NIS121)](ai-ml-security/Proven-techniques-to-build-a-trusted-software-supply-chain-for-AI-apps-NIS121/)** - AI application supply chain security
+- **[Managing digital identity in the age of generative AI (SEC322)](ai-ml-security/Managing-digital-identity-in-the-age-of-generative-AI-SEC322/)** - Digital identity management for AI systems
+- **[Protecting GenAI and the entire AI ecosystem (SEC206)](ai-ml-security/Protecting-GenAI-and-the-entire-AI-ecosystem-SEC206/)** - Comprehensive AI ecosystem protection
+- **[When every second counts: Agentic AI in cloud detection & response (TDR201)](ai-ml-security/When-every-second-counts-Agentic-AI-in-cloud-detection-response-TDR201/)** - AI-powered threat detection and response
+- **[Use generative AI for business growth amid the regulatory landscape (GRC225)](ai-ml-security/Use-generative-AI-for-business-growth-amid-the-regulatory-landscape-GRC225/)** - AI governance and regulatory compliance
+- **[Building secure generative AI security tools, featuring Trellix (TDR303)](ai-ml-security/Building-secure-generative-AI-security-tools-featuring-Trellix-TDR303/)** - AI-powered security tools development
 
 ### 🏗️ Infrastructure as Code & DevSecOps
 If you're implementing security controls in CI/CD pipelines and infrastructure:
@@ -67,6 +75,7 @@ If you're implementing security controls in CI/CD pipelines and infrastructure:
 - **[Move fast, stay secure: Lessons learned from the AWS prototyping team (APS341)](infrastructure-devSecops/Move-fast-stay-secure-Lessons-learned-from-the-AWS-prototyping-team-APS341/)** - Rapid secure development practices
 - **[Scaling AWS threat intelligence to protect customers (TDR304)](infrastructure-devSecops/Scaling-AWS-threat-intelligence-to-protect-customers-TDR304/)** - Threat intelligence integration
 - **[Securing CodeBuild managed runners: Patterns for GitLab & GitHub (APS202)](infrastructure-devSecops/Securing-CodeBuild-managed-runners-Patterns-for-GitLab-GitHub-APS202/)** - CI/CD security patterns
+- **[From compute to code: Expanding vulnerability scanning across the SDLC (APS203)](infrastructure-devSecops/From-compute-to-code-Expanding-vulnerability-scanning-across-the-SDLC-APS203/)** - Comprehensive vulnerability scanning across development lifecycle
 
 ### 🔐 Identity & Access Management
 If you're working on IAM, authorization, and access controls:
@@ -81,6 +90,9 @@ If you're working on IAM, authorization, and access controls:
 - **[Empowering developers to implement least privilege IAM permissions (IAM304)](identity-access-management/Empowering-developers-to-implement-least-privilege-IAM-permissions-IAM304/)** - Developer-focused IAM best practices
 - **[Establishing a data perimeter on AWS featuring Block Inc (IAM305)](identity-access-management/Establishing-a-data-perimeter-on-AWS-featuring-Block-Inc-IAM305/)** - Data perimeter implementation patterns
 - **[Implement app authorization in minutes with Amazon Verified Permissions (IAM306)](identity-access-management/Implement-app-authorization-in-minutes-with-Amazon-Verified-Permissions-IAM306/)** - Verified Permissions quick implementation
+- **[Understand who in your organization can access your AWS resources (IAM307-NEW)](identity-access-management/Understand-who-in-your-organization-can-access-your-AWS-resources-IAM307-NEW/)** - Resource access visibility and management
+- **[Visualizing workforce identity: Graph-based analysis for access rights (IAM341)](identity-access-management/Visualizing-workforce-identity-Graph-based-analysis-for-access-rights-IAM341/)** - Visual access rights analysis and management
+- **[Zero Trust in EKS: Securing workload identity and communication (IAM342)](identity-access-management/Zero-Trust-in-EKS-Securing-workload-identity-and-communication-IAM342/)** - Zero Trust implementation for Kubernetes workloads
 
 ### 🏢 Multi-Account & Enterprise Security
 If you're managing security across large AWS organizations:
@@ -100,6 +112,8 @@ If you're managing security across large AWS organizations:
 - **[How AWS designs the cloud to be the most secure for your business (SEC201)](multi-account-enterprise/How-AWS-designs-the-cloud-to-be-the-most-secure-for-your-business-SEC201/)** - AWS security design principles
 - **[How the AWS obsession with resilience helps customers build for adversity](multi-account-enterprise/How-the-AWS-obsession-with-resilience-helps-customers-build-for-adversity/)** - Resilience and business continuity
 - **[JPMC makes AWS organization more secure by removing thousands of root users](multi-account-enterprise/JPMC-makes-AWS-organization-more-secure-by-removing-thousands-of-root-users/)** - Large-scale root user management
+- **[Maintain business continuity using AWS Backup and Multi-party approval (GRC304)](multi-account-enterprise/Maintain-business-continuity-using-AWS-Backup-and-Multi-party-approvalGRC304/)** - Business continuity and backup governance
+- **[Simplify your AWS compliance insights using AWS Artifact (GRC322)](multi-account-enterprise/Simplify-your-AWS-compliance-insights-using-AWS-Artifact-GRC322/)** - Compliance management with AWS Artifact
 
 ### 🛡️ Threat Detection & Response
 If you're focused on security monitoring and incident response:
@@ -116,6 +130,11 @@ If you're focused on security monitoring and incident response:
 - **[Machine vs Machine: Winning the new security arms race (TDR324)](threat-detection-response/Machine-vs-Machine-Winning-the-new-security-arms-race-TDR324/)** - Automated security defense
 - **[Security tools are the new attack surface (TDR121)](threat-detection-response/Security-tools-are-the-new-attack-surface-TDR121/)** - Security tool hardening
 - **[Taming the alert avalanche: Cutting through SOC noise (TDR325)](threat-detection-response/Taming-the-alert-avalanche-Cutting-through-SOC-noise-TDR325/)** - Alert management and noise reduction
+- **[AWS Security Hub: Detect and respond to critical security issues (TDR309-NEW)](threat-detection-response/AWS-Security-Hub-Detect-and-respond-to-critical-security-issues-TDR309-NEW/)** - Enhanced Security Hub capabilities and response workflows
+- **[Amazon GuardDuty Extended Threat Detection: Identify multi-stage attacks (TDR308)](threat-detection-response/Amazon-GuardDuty-Extended-Threat-Detection-Identify-multi-stage-attacks-TDR308/)** - Advanced threat detection with GuardDuty
+- **[Eliminating blind spots in your security monitoring strategy (TDR203)](threat-detection-response/Eliminating-blind-spots-in-your-security-monitoring-strategy-TDR203/)** - Comprehensive security monitoring coverage
+- **[From detection to code: GuardDuty attack sequences with Amazon Q (TDR343)](threat-detection-response/From-detection-to-code-GuardDuty-attack-sequences-with-Amazon-Q-TDR343/)** - AI-powered attack sequence analysis
+- **[From incidents to insights: Creating a security learning organization (TDR224)](threat-detection-response/From-incidents-to-insights-Creating-a-security-learning-organization-TDR224/)** - Incident response and organizational learning
 
 ### 🔒 Data Protection & Encryption
 If you're working on data security and encryption:
@@ -130,6 +149,10 @@ If you're working on data security and encryption:
 - **[Demystifying attestation: Measure and verify your execution environment (DAP442)](data-protection-encryption/Demystifying-attestation-Measure-and-verify-your-execution-environment-DAP442/)** - Execution environment verification
 - **[Fannie Mae's practical path to modern PKI and certificate management (DAP302)](data-protection-encryption/Fannie-Maes-practical-path-to-modern-PKI-and-certificate-management-DAP302/)** - Enterprise PKI modernization
 - **[Veradigm's security-first approach to amplifying potential with GenAI (DAP201)](data-protection-encryption/Veradigms-security-first-approach-to-amplifying-potential-with-GenAI-DAP201/)** - Healthcare AI security implementation
+- **[How Monzo Bank protects critical workloads using AWS Nitro Enclaves (DAP322)](data-protection-encryption/How-Monzo-Bank-protects-critical-workloads-using-AWS-Nitro-Enclaves-DAP322/)** - Nitro Enclaves for sensitive workload protection
+- **[Navigating sovereignty requirements: Architectures and solutions on AWS (DAP202)](data-protection-encryption/Navigating-sovereignty-requirements-Architectures-and-solutions-on-AWS-DAP202/)** - Data sovereignty and compliance architectures
+- **[Your DevOps stack has a blind spot: Data resilience (DAP321)](data-protection-encryption/Your-DevOps-stack-has-a-blind-spot-Data-resilience-DAP321/)** - Data resilience in DevOps workflows
+- **[Internet security: The past and future of TLS certificates and web PKI (SEC209)](data-protection-encryption/Internet-security-The-past-and-future-of-TLS-certificates-and-web-PKI-SEC209/)** - TLS and PKI security evolution
 
 ### 🌐 Network Security & Web Protection  
 If you're securing network infrastructure and web applications:
@@ -142,6 +165,15 @@ If you're securing network infrastructure and web applications:
 - **[Outbound network controls made easy (NIS301)](network-security-web/Outbound-network-controls-made-easy-NIS301/)** - Simplified outbound network security
 - **[Strengthen your network security with AWS Shield (NIS202-NEW)](network-security-web/Strengthen-your-network-security-with-AWS-Shield-NIS202-NEW/)** - AWS Shield security enhancements
 - **[Strengthening network security with AWS Network & DNS Firewall (COM321)](network-security-web/Strengthening-network-security-with-AWS-Network-DNS-Firewall-COM321/)** - Network and DNS firewall integration
+- **[AWS Network Firewall: Latest features and deployment options (NIS201-NEW)](network-security-web/AWS-Network-Firewall-Latest-features-and-deployment-options-NIS201-NEW/)** - Latest Network Firewall capabilities and deployment patterns
+- **[Cyber for Industry 4.0: What is CPS protection anyway? (NIS123)](network-security-web/Cyber-for-Industry-40-What-is-CPS-protection-anyway-NIS123/)** - Cyber-physical system protection for industrial environments
+- **[Integrate Zero Trust into your cloud network (NIS304)](network-security-web/Integrate-Zero-Trust-into-your-cloud-network-NIS304/)** - Zero Trust network architecture implementation
+- **[Redefining cybersecurity for modern threats with Armis Centrix (NIS122)](network-security-web/Redefining-cybersecurity-for-modern-threats-with-Armis-Centrix-NIS122/)** - Modern threat protection with Armis integration
+- **[Securing AWS networks: Observability meets defense-in-depth (NIS306)](network-security-web/Securing-AWS-networks-Observability-meets-defense-in-depth-NIS306/)** - Network security observability and defense strategies
+- **[Simplify AWS WAF and Amazon CloudFront Security for Faster Deployment (NIS203-NEW)](network-security-web/Simplify-AWS-WAF-and-Amazon-CloudFront-Security-for-Faster-Deployment-NIS203-NEW/)** - Streamlined WAF and CloudFront security deployment
+- **[Thinking beyond traditional firewalling architectures (NIS303)](network-security-web/Thinking-beyond-traditional-firewalling-architectures-NIS303/)** - Modern firewall architecture patterns
+- **[VPN-less access to AWS private services with AWS Verified Access (NIS421)](network-security-web/VPN-less-access-to-AWS-private-services-with-AWS-Verified-Access-NIS421/)** - Secure access without VPN using Verified Access
+- **[WAF logs to security gold: A 20-minute dashboard revolution (NIS323)](network-security-web/WAF-logs-to-security-gold-A-20-minute-dashboard-revolution-NIS323/)** - WAF log analysis and dashboard creation
 
 ### 👥 Security Culture & Team Management
 If you're building security teams and culture:
@@ -164,6 +196,10 @@ If you're building security teams and culture:
 - **[Transform security and compliance into your innovation catalyst (SEC327)](security-culture-teams/Transform-security-and-compliance-into-your-innovation-catalyst-SEC327/)** - Security as business enabler
 - **[Transitioning security mindsets: From on-premises to cloud-native security](security-culture-teams/Transitioning-security-mindsets-From-on-premises-to-cloud-native-security/)** - Cloud security transformation
 - **[Building stronger cloud defense with real-world insights (SEC207)](security-culture-teams/Building-stronger-cloud-defense-with-real-world-insights-SEC207/)** - Real-world security defense strategies
+- **[AWS Heroes launch insights (COM220)](security-culture-teams/AWS-Heroes-launch-insights-COM220/)** - Community insights from AWS Heroes program
+- **[Security as an innovation driver: Robinhood Markets' CSO insights (SEC205)](security-culture-teams/Security-as-an-innovation-driver-Robinhood-Markets-CSO-insights-SEC205/)** - Executive perspective on security as business enabler
+- **[What good looks like: Building and improving cloud security (SEC203)](security-culture-teams/What-good-looks-like-Building-and-improving-cloud-security-SEC203/)** - Cloud security best practices and maturity models
+- **[Enhancing security operations with Next Gen SIEM and ConvergeSECURITY (SEC325)](security-culture-teams/Enhancing-security-operations-with-Next-Gen-SIEM-and-ConvergeSECURITY-SEC325/)** - Modern SIEM and security operations enhancement
 
 ---
 
