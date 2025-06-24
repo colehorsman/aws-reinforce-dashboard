@@ -222,10 +222,10 @@ def get_db_connection():
 @st.cache_data(ttl=300, max_entries=50, show_spinner=False)
 def run_query(sql, params=None):
     """Execute SQL query with connection pooling, caching and security validation."""
-    # Basic SQL injection protection - only allow SELECT statements for data queries
+    # Basic SQL injection protection - only allow SELECT statements and CTEs for data queries
     sql_stripped = sql.strip().upper()
-    if not sql_stripped.startswith('SELECT'):
-        raise ValueError("Only SELECT statements are allowed")
+    if not (sql_stripped.startswith('SELECT') or sql_stripped.startswith('WITH')):
+        raise ValueError("Only SELECT statements and CTEs are allowed")
     
     # Block dangerous SQL patterns
     dangerous_patterns = ['DROP', 'DELETE', 'INSERT', 'UPDATE', 'CREATE', 'ALTER', 'EXEC', 'TRUNCATE']
