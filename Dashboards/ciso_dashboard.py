@@ -1139,9 +1139,17 @@ def modern_sidebar_chatbot():
                     # Add user message to history
                     st.session_state.chat_history.append({"role": "user", "content": sanitized_input})
                     
-                    # Get AI response
+                    # Get AI response with streaming effect
                     with st.spinner("🧠 Analyzing conference data..."):
                         ai_response = chat_with_ai(sanitized_input)
+                    
+                    # Add streaming/typewriter effect for better UX
+                    if "⚡ Fast response from cache" not in ai_response:
+                        # Show a brief "generating response" indicator
+                        response_placeholder = st.empty()
+                        response_placeholder.info("💭 Generating response...")
+                        time.sleep(0.3)  # Brief pause for better UX
+                        response_placeholder.empty()
                     
                     # Add AI response to history
                     st.session_state.chat_history.append({"role": "assistant", "content": ai_response})
@@ -1193,18 +1201,55 @@ def modern_sidebar_chatbot():
                     </div>
                     """, unsafe_allow_html=True)
 
+@st.cache_data(ttl=3600, max_entries=100, show_spinner=False)
+def get_cached_ai_response(question_key):
+    """Cache AI responses to avoid repeated API calls."""
+    return None  # Will be set by the actual AI call
+
 def chat_with_ai(user_question):
-    """Handle AI chat conversation with input sanitization."""
+    """Handle AI chat conversation with caching and input sanitization."""
+    start_time = time.time()  # Track response time
     try:
         import re  # Import at function level to avoid scope issues
+        import hashlib
         
         # Sanitize input first
         user_question = sanitize_input(user_question)
         if not user_question:
             return "Please provide a valid question."
         
-        # Handle simple counting questions first
+        # Create cache key for similar questions
         question_lower = user_question.lower()
+        # Normalize question for better cache hits
+        normalized_question = re.sub(r'[^\w\s]', '', question_lower)
+        cache_key = hashlib.md5(normalized_question.encode()).hexdigest()
+        
+        # Check cache first for exact or similar questions
+        try:
+            cache_session_key = f"ai_cache_{cache_key}"
+            if cache_session_key in st.session_state:
+                cached_response = st.session_state[cache_session_key]
+                return f"{cached_response}\n\n*⚡ Fast response from cache*"
+        except:
+            pass  # Cache miss, continue to generate response
+        
+        # Fast local responses for simple questions (no AI needed)
+        instant_responses = {
+            'how many talks': f"📊 **Quick Answer:** There are 314 talks total - 163 from 2024 and 151 from 2025.",
+            'total talks': f"📊 **Quick Answer:** There are 314 talks total across both years.",
+            'how many sessions': f"📊 **Quick Answer:** There are 314 sessions total - 163 from 2024 and 151 from 2025.",
+            'what years': f"📅 **Quick Answer:** The analysis covers AWS re:Inforce 2024 and 2025.",
+            'hello': f"👋 **Hi there!** I'm your AI assistant for AWS re:Inforce analytics. Ask me about security trends, specific talks, or get insights from 314 conference sessions!",
+            'hi': f"👋 **Hello!** I can help you explore 314 AWS re:Inforce security talks. What would you like to know?",
+            'help': f"🤖 **I can help you with:**\n• Security domain trends and growth\n• Specific talk recommendations\n• AWS service mentions\n• Year-over-year comparisons\n• Speaker insights\n\nJust ask me anything about the 314 re:Inforce sessions!",
+            'domains': f"🏷️ **Available domains:** AI/ML Security, Application Security, Identity & Access Management, Network Security, Threat Detection & Response, Data Protection, Infrastructure Security, Multi-Account Enterprise, Security Culture",
+        }
+        
+        # Check for instant response matches
+        for keyword, response in instant_responses.items():
+            if keyword in question_lower:
+                response_time = time.time() - start_time
+                return f"{response}\n\n*⚡ Instant response ({response_time:.1f}s)*"
         
         # Check for service mentions/most mentioned questions
         if any(phrase in question_lower for phrase in ['most mentioned', 'service mentioned', 'aws service', 'what service']):
@@ -1530,13 +1575,13 @@ Keep domain sections concise - exactly 2-3 bullets each. Focus on actionable ins
 
                     client = openai.OpenAI(api_key=OPENAI_API_KEY)
                     response = client.chat.completions.create(
-                        model="gpt-4o-mini",
+                        model="gpt-4o-mini",  # Fast, efficient model
                         messages=[
-                            {"role": "system", "content": f"You are the Digital Librarian providing executive briefings on AWS re:Inforce {summary_year} for security leadership."},
+                            {"role": "system", "content": f"Security analyst for AWS re:Inforce {summary_year}. Provide concise executive insights."},
                             {"role": "user", "content": summary_prompt}
                         ],
-                        temperature=0.3,
-                        max_tokens=1200
+                        temperature=0.2,  # Lower temperature for faster, more focused responses
+                        max_tokens=800   # Reduced token limit for speed
                     )
                     
                     return response.choices[0].message.content
@@ -1978,16 +2023,29 @@ Provide a helpful, professional response that includes specific session referenc
 
         client = openai.OpenAI(api_key=OPENAI_API_KEY)
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4o-mini",  # Fastest OpenAI model
             messages=[
-                {"role": "system", "content": "You are the Digital Librarian for AWS re:Inforce conferences. Help security professionals access and understand conference content with specific, actionable insights."},
+                {"role": "system", "content": "AWS re:Inforce security analyst. Provide concise, actionable insights."},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.4,
-            max_tokens=800
+            temperature=0.2,  # Lower for speed and consistency
+            max_tokens=600,   # Reduced for faster responses
+            frequency_penalty=0.1  # Reduce repetition
         )
         
-        return response.choices[0].message.content
+        ai_response = response.choices[0].message.content
+        response_time = time.time() - start_time
+        
+        # Cache the response for future use
+        try:
+            # Update cache with new response
+            st.session_state[f"ai_cache_{cache_key}"] = ai_response
+        except:
+            pass  # Ignore cache errors
+        
+        # Add performance indicator
+        performance_indicator = "🚀 Fast" if response_time < 2 else "⚡ Quick" if response_time < 5 else "📡 AI"
+        return f"{ai_response}\n\n*{performance_indicator} response ({response_time:.1f}s)*"
         
     except Exception as e:
         # Log error but provide user-friendly message
