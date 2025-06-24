@@ -27,6 +27,11 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 if not OPENAI_API_KEY and "OPENAI_API_KEY" in st.secrets:
     OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 
+# Get Google Analytics ID from environment variable or Streamlit secrets
+GOOGLE_ANALYTICS_ID = os.getenv("GOOGLE_ANALYTICS_ID", "G-1ZZVYPJG7N")
+if not GOOGLE_ANALYTICS_ID and "GOOGLE_ANALYTICS_ID" in st.secrets:
+    GOOGLE_ANALYTICS_ID = st.secrets["GOOGLE_ANALYTICS_ID"]
+
 # Database configuration
 DB_CONFIG = {
     'host': 'localhost',
@@ -78,6 +83,22 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Add Google Analytics 4 tracking
+if GOOGLE_ANALYTICS_ID:
+    st.markdown(f"""
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={GOOGLE_ANALYTICS_ID}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){{dataLayer.push(arguments);}}
+      gtag('js', new Date());
+      gtag('config', '{GOOGLE_ANALYTICS_ID}', {{
+        'anonymize_ip': true,
+        'cookie_flags': 'SameSite=Strict;Secure'
+      }});
+    </script>
+    """, unsafe_allow_html=True)
 
 # Add responsive design CSS and security headers
 st.markdown("""
@@ -183,6 +204,21 @@ button:focus, .stSelectbox:focus-within, .stTextArea:focus-within {
 }
 </style>
 """, unsafe_allow_html=True)
+
+# Google Analytics event tracking helper
+def track_event(event_name, parameters=None):
+    """Track custom events in Google Analytics."""
+    if GOOGLE_ANALYTICS_ID and parameters is None:
+        parameters = {}
+    
+    if GOOGLE_ANALYTICS_ID:
+        st.markdown(f"""
+        <script>
+          if (typeof gtag !== 'undefined') {{
+            gtag('event', '{event_name}', {json.dumps(parameters)});
+          }}
+        </script>
+        """, unsafe_allow_html=True)
 
 # Add security headers for production
 if 'STREAMLIT_PRODUCTION' in os.environ:
@@ -1252,13 +1288,20 @@ def chat_with_ai(user_question):
                 return f"{response}\n\n*⚡ Instant response ({response_time:.1f}s)*"
         
         # Check for service mentions/most mentioned questions
-        if any(phrase in question_lower for phrase in ['most mentioned', 'service mentioned', 'aws service', 'what service']):
+        service_query_patterns = [
+            'most mentioned', 'service mentioned', 'aws service', 'what service',
+            'how many times', 'mentioned in', 'guardduty', 'guard duty', 'security hub',
+            'inspector', 'cloudtrail', 'cloudwatch', 'bedrock', 'iam', 'lambda',
+            's3', 'ec2', 'vpc', 'kms', 'waf', 'shield', 'macie', 'cognito'
+        ]
+        
+        if any(phrase in question_lower for phrase in service_query_patterns):
             # Extract year if specified
             year_match = re.search(r'(2024|2025)', question_lower)
             year_filter = int(year_match.group(1)) if year_match else None
             
-            # Get transcripts for analysis
-            where_clause = "full_transcript IS NOT NULL AND full_transcript != ''"
+            # Get comprehensive data for analysis (transcript, key_points, technical_details)
+            where_clause = "(full_transcript IS NOT NULL AND full_transcript != '') OR (key_points IS NOT NULL) OR (technical_details IS NOT NULL)"
             params = []
             
             if year_filter:
@@ -1266,7 +1309,7 @@ def chat_with_ai(user_question):
                 params.append(year_filter)
             
             sql = f"""
-            SELECT title, full_transcript, year
+            SELECT title, full_transcript, key_points, technical_details, year, domain
             FROM summaries 
             WHERE {where_clause}
             """
