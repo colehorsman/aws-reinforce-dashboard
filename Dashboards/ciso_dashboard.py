@@ -4,7 +4,6 @@ Executive CISO Dashboard with Advanced Analytics and Search-to-Chart capabilitie
 """
 
 import streamlit as st
-import streamlit.components.v1 as components
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -28,10 +27,6 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 if not OPENAI_API_KEY and "OPENAI_API_KEY" in st.secrets:
     OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 
-# Get Google Analytics ID from environment variable or Streamlit secrets
-GOOGLE_ANALYTICS_ID = os.getenv("GOOGLE_ANALYTICS_ID", "G-1ZZVYPJG7N")
-if not GOOGLE_ANALYTICS_ID and "GOOGLE_ANALYTICS_ID" in st.secrets:
-    GOOGLE_ANALYTICS_ID = st.secrets["GOOGLE_ANALYTICS_ID"]
 
 # Database configuration
 DB_CONFIG = {
@@ -85,49 +80,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Inject Google Analytics immediately after page config
-st.markdown(f"""
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-1ZZVYPJG7N"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){{dataLayer.push(arguments);}}
-  gtag('js', new Date());
-  gtag('config', 'G-1ZZVYPJG7N');
-</script>
-""", unsafe_allow_html=True)
-
-# Add Google Analytics 4 tracking with better placement
-if GOOGLE_ANALYTICS_ID:
-    # Method 1: Try to inject into head
-    components.html(f"""
-    <script async src="https://www.googletagmanager.com/gtag/js?id={GOOGLE_ANALYTICS_ID}"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){{dataLayer.push(arguments);}}
-      gtag('js', new Date());
-      gtag('config', '{GOOGLE_ANALYTICS_ID}', {{
-        'anonymize_ip': true,
-        'cookie_flags': 'SameSite=Strict;Secure'
-      }});
-      console.log('Google Analytics loaded with ID: {GOOGLE_ANALYTICS_ID}');
-    </script>
-    """, height=0)
-    
-    # Method 2: Also try with st.markdown for fallback
-    st.markdown(f"""
-    <script async src="https://www.googletagmanager.com/gtag/js?id={GOOGLE_ANALYTICS_ID}"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){{dataLayer.push(arguments);}}
-      gtag('js', new Date());
-      gtag('config', '{GOOGLE_ANALYTICS_ID}');
-      console.log('GA fallback loaded');
-    </script>
-    """, unsafe_allow_html=True)
-    
-    # Debug: Show GA status in development
-    if os.getenv("STREAMLIT_DEBUG"):
-        st.sidebar.success(f"✅ GA4 Active: {GOOGLE_ANALYTICS_ID}")
 
 # Add responsive design CSS and security headers
 st.markdown("""
@@ -234,20 +186,6 @@ button:focus, .stSelectbox:focus-within, .stTextArea:focus-within {
 </style>
 """, unsafe_allow_html=True)
 
-# Google Analytics event tracking helper
-def track_event(event_name, parameters=None):
-    """Track custom events in Google Analytics."""
-    if GOOGLE_ANALYTICS_ID and parameters is None:
-        parameters = {}
-    
-    if GOOGLE_ANALYTICS_ID:
-        st.markdown(f"""
-        <script>
-          if (typeof gtag !== 'undefined') {{
-            gtag('event', '{event_name}', {json.dumps(parameters)});
-          }}
-        </script>
-        """, unsafe_allow_html=True)
 
 # Add security headers for production
 if 'STREAMLIT_PRODUCTION' in os.environ:
@@ -1200,14 +1138,6 @@ def modern_sidebar_chatbot():
                     # Record this request
                     import time
                     st.session_state.rate_limit_requests.append(time.time())
-                    
-                    # Track AI chatbot query
-                    track_event('ai_chat_query', {
-                        'query_length': len(sanitized_input),
-                        'has_comparison': 'compare' in sanitized_input.lower() or 'vs' in sanitized_input.lower(),
-                        'mentions_ai': 'ai' in sanitized_input.lower() or 'artificial intelligence' in sanitized_input.lower(),
-                        'mentions_iam': 'iam' in sanitized_input.lower() or 'identity' in sanitized_input.lower()
-                    })
                     
                     # Add user message to history
                     st.session_state.chat_history.append({"role": "user", "content": sanitized_input})
@@ -2177,11 +2107,6 @@ def main():
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["📈 Executive Summary", "📚 Browse Talks", "🚀 re:Inforce Announcements", "🔮 2026 Predictions", "📋 Data Validation"])
     
     with tab1:
-        # Track Executive Summary tab view
-        track_event('page_view', {
-            'page_title': 'Executive Summary',
-            'tab_name': 'executive_summary'
-        })
         st.header("📊 Dashboard")
         st.markdown("**Strategic insights for security leadership and investment planning**")
         
@@ -2261,11 +2186,6 @@ def main():
             print(f"Dashboard error: {str(e)}")  # Log for debugging
     
     with tab2:
-        # Track Browse Talks tab view
-        track_event('page_view', {
-            'page_title': 'Browse Talks',
-            'tab_name': 'browse_talks'
-        })
         st.header("📚 Browse All Talks")
         st.markdown("Browse and filter all conference talks by year and domain")
         
@@ -2381,11 +2301,6 @@ def main():
         
     
     with tab3:
-        # Track re:Inforce Announcements tab view
-        track_event('page_view', {
-            'page_title': 'reInforce Announcements',
-            'tab_name': 'announcements'
-        })
         st.header("🚀 AWS re:Inforce Announcements")
         st.markdown("**Track AWS security feature announcements and product launches during re:Inforce events**")
         
@@ -2494,11 +2409,6 @@ def main():
         
     
     with tab4:
-        # Track 2026 Predictions tab view
-        track_event('page_view', {
-            'page_title': '2026 Predictions',
-            'tab_name': '2026_predictions'
-        })
         st.header("🔮 AWS re:Inforce 2026 Predictions")
         st.markdown("**Data-driven predictions for AWS re:Inforce 2026 based on 2024-2025 analysis**")
         
@@ -2637,11 +2547,6 @@ def main():
         """)
     
     with tab5:
-        # Track Data Validation tab view
-        track_event('page_view', {
-            'page_title': 'Data Validation',
-            'tab_name': 'data_validation'
-        })
         st.header("📋 Data Validation & Reliability")
         st.markdown("Verify data integrity for executive reporting")
         
