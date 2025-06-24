@@ -1738,6 +1738,28 @@ def main():
     st.title("🔒 re:Inforce analysis")
     st.markdown("**Executive Analysis of 314 Security Conference Sessions & AWS Investment Trends (2024-2025)**")
     
+    # Quick navigation bar
+    st.markdown("---")
+    nav_col1, nav_col2, nav_col3, nav_col4 = st.columns(4)
+    
+    with nav_col1:
+        if st.button("📈 Dashboard", use_container_width=True, key="nav_dashboard"):
+            st.session_state.current_tab = 0
+    
+    with nav_col2:
+        if st.button("📚 Browse", use_container_width=True, key="nav_browse"):
+            st.session_state.current_tab = 1
+    
+    with nav_col3:
+        if st.button("🚀 Announcements", use_container_width=True, key="nav_announcements"):
+            st.session_state.current_tab = 2
+    
+    with nav_col4:
+        if st.button("🔮 Predictions", use_container_width=True, key="nav_predictions"):
+            st.session_state.current_tab = 3
+    
+    st.markdown("---")
+    
     # Sidebar
     st.sidebar.header("📈 Key Metrics")
     
@@ -1807,6 +1829,25 @@ def main():
             display_df = display_df[['domain', 'talks_2024', 'talks_2025', 'Growth %', 'speakers_2024', 'speakers_2025']]
             display_df.columns = ['Domain', '2024 Talks', '2025 Talks', 'Growth %', '2024 Speakers', '2025 Speakers']
             st.dataframe(display_df, use_container_width=True)
+        
+        # Footer navigation
+        st.markdown("---")
+        foot_col1, foot_col2, foot_col3, foot_col4 = st.columns(4)
+        with foot_col1:
+            if st.button("📚 Browse Talks →", use_container_width=True, key="dash_to_browse"):
+                st.session_state.current_tab = 1
+                st.rerun()
+        with foot_col2:
+            if st.button("🚀 View Announcements →", use_container_width=True, key="dash_to_announce"):
+                st.session_state.current_tab = 2
+                st.rerun()
+        with foot_col3:
+            if st.button("🔮 2026 Predictions →", use_container_width=True, key="dash_to_predict"):
+                st.session_state.current_tab = 3
+                st.rerun()
+        with foot_col4:
+            if st.button("🔝 Back to Top", use_container_width=True, key="dash_to_top"):
+                st.rerun()
     
     with tab2:
         st.header("📚 Browse All Talks")
@@ -1910,6 +1951,25 @@ def main():
                     st.markdown("---")
         else:
             st.warning("No talks found with the selected filters.")
+        
+        # Footer navigation for Browse Talks
+        st.markdown("---")
+        browse_foot1, browse_foot2, browse_foot3, browse_foot4 = st.columns(4)
+        with browse_foot1:
+            if st.button("📈 ← Dashboard", use_container_width=True, key="browse_to_dash"):
+                st.session_state.current_tab = 0
+                st.rerun()
+        with browse_foot2:
+            if st.button("🚀 Announcements →", use_container_width=True, key="browse_to_announce"):
+                st.session_state.current_tab = 2
+                st.rerun()
+        with browse_foot3:
+            if st.button("🔮 Predictions →", use_container_width=True, key="browse_to_predict"):
+                st.session_state.current_tab = 3
+                st.rerun()
+        with browse_foot4:
+            if st.button("🔝 Back to Top", use_container_width=True, key="browse_to_top"):
+                st.rerun()
     
     with tab3:
         st.header("🚀 AWS re:Inforce Announcements")
@@ -1933,7 +1993,17 @@ def main():
         with col3:
             top_domain = announcements_summary.iloc[0].name
             top_count = int(announcements_summary.iloc[0]['Total'])
-            st.metric("Top Domain", top_domain, f"{top_count} total")
+            # Shorten domain names for display
+            domain_short = {
+                "Identity & Access Management": "IAM",
+                "Threat Detection & Response": "Threat Detection",
+                "Data Protection & Encryption": "Data Protection",
+                "Network Security & Web": "Network Security",
+                "Infrastructure & DevSecOps": "Infrastructure",
+                "AI/ML Security": "AI Security"
+            }
+            short_domain = domain_short.get(top_domain, top_domain)
+            st.metric("Top Domain", short_domain, f"{top_count} total")
         
         with col4:
             total_announcements = announcements_df.shape[0]
@@ -2007,6 +2077,25 @@ def main():
                     if row['link']:
                         st.markdown(f"[📖 Official AWS Blog]({row['link']})")
                     st.markdown("---")
+        
+        # Footer navigation for Announcements
+        st.markdown("---")
+        announce_foot1, announce_foot2, announce_foot3, announce_foot4 = st.columns(4)
+        with announce_foot1:
+            if st.button("📈 ← Dashboard", use_container_width=True, key="announce_to_dash"):
+                st.session_state.current_tab = 0
+                st.rerun()
+        with announce_foot2:
+            if st.button("📚 ← Browse Talks", use_container_width=True, key="announce_to_browse"):
+                st.session_state.current_tab = 1
+                st.rerun()
+        with announce_foot3:
+            if st.button("🔮 Predictions →", use_container_width=True, key="announce_to_predict"):
+                st.session_state.current_tab = 3
+                st.rerun()
+        with announce_foot4:
+            if st.button("🔝 Back to Top", use_container_width=True, key="announce_to_top"):
+                st.rerun()
     
     with tab4:
         st.header("🔮 AWS re:Inforce 2026 Predictions")
