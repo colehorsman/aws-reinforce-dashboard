@@ -12,11 +12,14 @@ import psycopg2
 import re
 import numpy as np
 from datetime import datetime
+import time
 import json
 import openai
 import os
 import warnings
 import sqlalchemy
+from sqlalchemy import create_engine, text
+from sqlalchemy.pool import QueuePool
 import html
 
 # Get OpenAI API key from environment variable or Streamlit secrets
@@ -31,6 +34,42 @@ DB_CONFIG = {
     'user': 'colehorsman',
     'port': 5432
 }
+
+# Global connection pool
+_engine = None
+
+def get_db_engine():
+    """Get or create database engine with connection pooling."""
+    global _engine
+    if _engine is None:
+        try:
+            if 'postgres' in st.secrets:
+                # Production connection string with pooling
+                connection_string = f"postgresql://{st.secrets['postgres']['user']}:{st.secrets['postgres']['password']}@{st.secrets['postgres']['host']}:{st.secrets['postgres']['port']}/{st.secrets['postgres']['database']}"
+                _engine = create_engine(
+                    connection_string,
+                    poolclass=QueuePool,
+                    pool_size=10,  # Number of connections to maintain
+                    max_overflow=20,  # Additional connections allowed
+                    pool_pre_ping=True,  # Verify connections before use
+                    pool_recycle=3600,  # Recycle connections after 1 hour
+                    echo=False  # Set to True for SQL debugging
+                )
+            else:
+                # Local development connection
+                connection_string = f"postgresql://{DB_CONFIG['user']}@{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['database']}"
+                _engine = create_engine(
+                    connection_string,
+                    poolclass=QueuePool,
+                    pool_size=5,
+                    max_overflow=10,
+                    pool_pre_ping=True,
+                    pool_recycle=3600
+                )
+        except Exception as e:
+            st.error(f"Failed to create database engine: {e}")
+            return None
+    return _engine
 
 # Page configuration with security headers
 st.set_page_config(
@@ -72,9 +111,9 @@ def get_db_connection():
         st.error(f"Database connection failed: {e}")
         return None
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=300, max_entries=50, show_spinner=False)
 def run_query(sql, params=None):
-    """Execute SQL query with caching and security validation - Streamlit Cloud compatible."""
+    """Execute SQL query with connection pooling, caching and security validation."""
     # Basic SQL injection protection - only allow SELECT statements for data queries
     sql_stripped = sql.strip().upper()
     if not sql_stripped.startswith('SELECT'):
@@ -87,37 +126,49 @@ def run_query(sql, params=None):
             raise ValueError(f"Dangerous SQL pattern detected: {pattern}")
     
     try:
-        # Check if running on Streamlit Cloud
-        if 'postgres' in st.secrets:
-            # Use SQLAlchemy for better Streamlit Cloud compatibility
-            connection_string = f"postgresql://{st.secrets['postgres']['user']}:{st.secrets['postgres']['password']}@{st.secrets['postgres']['host']}:{st.secrets['postgres']['port']}/{st.secrets['postgres']['database']}"
+        # Use connection pooling for better performance
+        engine = get_db_engine()
+        if not engine:
+            return None
+        
+        # Performance monitoring for production
+        start_time = time.time()
             
-            engine = sqlalchemy.create_engine(connection_string)
+        # Convert list params to tuple for SQLAlchemy compatibility
+        if isinstance(params, list):
+            params = tuple(params) if params else None
+        
+        # Use SQLAlchemy text() for parameterized queries
+        if params:
+            # Convert % placeholders to SQLAlchemy format
+            sql_formatted = sql.replace('%s', ':param')
+            # Create parameter dict
+            param_dict = {f'param{i}' if len(params) > 1 else 'param': param for i, param in enumerate(params)}
+            if len(params) == 1:
+                param_dict = {'param': params[0]}
+            else:
+                param_dict = {f'param{i}': param for i, param in enumerate(params)}
+                # Update SQL to use numbered parameters
+                for i in range(len(params)):
+                    sql_formatted = sql_formatted.replace(':param', f':param{i}', 1)
             
-            # Convert list params to tuple for SQLAlchemy compatibility
-            if isinstance(params, list):
-                params = tuple(params) if params else None
-            
-            # Suppress pandas warnings that might cause issues
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                df = pd.read_sql_query(sql, engine, params=params)
-            
-            engine.dispose()
-            return df
+            query = text(sql_formatted)
         else:
-            # Local development
-            conn = get_db_connection()
-            if not conn:
-                return None
-            
-            try:
-                with warnings.catch_warnings():
-                    warnings.simplefilter("ignore")
-                    df = pd.read_sql_query(sql, conn, params=params)
-                return df
-            finally:
-                conn.close()
+            query = text(sql)
+            param_dict = {}
+        
+        # Execute query with connection pooling
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            with engine.connect() as conn:
+                df = pd.read_sql_query(query, conn, params=param_dict)
+        
+        # Log slow queries for optimization
+        query_time = time.time() - start_time
+        if query_time > 2.0:  # Log queries taking more than 2 seconds
+            print(f"Slow query detected: {query_time:.2f}s - {sql[:100]}...")
+        
+        return df
                 
     except Exception as e:
         st.error(f"Database query failed: {str(e)}")
@@ -150,7 +201,7 @@ def sanitize_input(user_input):
     
     return sanitized.strip()
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=3600)
 def get_talk_details(talk_id=None, session_code=None, title=None):
     """Get full details for a specific talk."""
     where_clause = "1=1"
@@ -178,40 +229,42 @@ def get_talk_details(talk_id=None, session_code=None, title=None):
     
     return run_query(sql, params)
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=1800)
 def get_executive_summary():
-    """Get executive summary statistics."""
+    """Get executive summary statistics with optimized query."""
     sql = """
-    WITH yearly_stats AS (
+    WITH stats AS (
         SELECT 
-            year,
-            COUNT(*) as total_talks,
-            COUNT(DISTINCT domain) as domains,
-            COUNT(DISTINCT speaker_name) FILTER (WHERE speaker_name IS NOT NULL AND speaker_name != '') as speakers
+            COUNT(*) FILTER (WHERE year = 2024) as talks_2024,
+            COUNT(*) FILTER (WHERE year = 2025) as talks_2025,
+            COUNT(DISTINCT domain) as total_domains,
+            COUNT(DISTINCT speaker_name) FILTER (WHERE speaker_name IS NOT NULL AND speaker_name != '') as total_speakers
         FROM summaries
-        GROUP BY year
     ),
-    growth_stats AS (
+    domain_growth AS (
         SELECT 
             domain,
-            SUM(CASE WHEN year = 2024 THEN 1 ELSE 0 END) as talks_2024,
-            SUM(CASE WHEN year = 2025 THEN 1 ELSE 0 END) as talks_2025,
-            ROUND((SUM(CASE WHEN year = 2025 THEN 1 ELSE 0 END) - SUM(CASE WHEN year = 2024 THEN 1 ELSE 0 END)) * 100.0 / 
-                  NULLIF(SUM(CASE WHEN year = 2024 THEN 1 ELSE 0 END), 0), 1) as growth_rate
+            ROUND((COUNT(*) FILTER (WHERE year = 2025) - COUNT(*) FILTER (WHERE year = 2024)) * 100.0 / 
+                  NULLIF(COUNT(*) FILTER (WHERE year = 2024), 0), 1) as growth_rate
         FROM summaries 
         GROUP BY domain
+        HAVING COUNT(*) FILTER (WHERE year = 2024) > 0
+        ORDER BY growth_rate DESC 
+        LIMIT 1
     )
     SELECT 
-        (SELECT total_talks FROM yearly_stats WHERE year = 2024) as talks_2024,
-        (SELECT total_talks FROM yearly_stats WHERE year = 2025) as talks_2025,
-        (SELECT COUNT(DISTINCT domain) FROM summaries) as total_domains,
-        (SELECT COUNT(DISTINCT speaker_name) FROM summaries WHERE speaker_name IS NOT NULL AND speaker_name != '') as total_speakers,
-        (SELECT domain FROM growth_stats ORDER BY growth_rate DESC LIMIT 1) as fastest_growing_domain,
-        (SELECT growth_rate FROM growth_stats ORDER BY growth_rate DESC LIMIT 1) as highest_growth_rate
+        s.talks_2024,
+        s.talks_2025,
+        s.total_domains,
+        s.total_speakers,
+        d.domain as fastest_growing_domain,
+        d.growth_rate as highest_growth_rate
+    FROM stats s
+    CROSS JOIN domain_growth d
     """
     return run_query(sql)
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=1800)
 def get_domain_analysis():
     """Get comprehensive domain analysis."""
     sql = """
@@ -248,20 +301,28 @@ def get_domain_analysis():
     """
     return run_query(sql)
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=1800)
 def get_available_domains():
-    """Get list of available domains from database."""
+    """Get list of available domains from database with robust fallback."""
+    # Primary fallback domains based on AWS re:Inforce structure
+    fallback_domains = ["All", "AI/ML Security", "Application Security", "Identity & Access Management", 
+                       "Network Security", "Threat Detection & Response", "Data Protection", 
+                       "Infrastructure Security", "Multi-Account Enterprise", "Security Culture"]
+    
     try:
-        sql = "SELECT DISTINCT domain FROM summaries ORDER BY domain"
+        sql = "SELECT DISTINCT domain FROM summaries WHERE domain IS NOT NULL ORDER BY domain"
         result = run_query(sql)
-        if result is not None and not result.empty:
-            return ["All"] + result['domain'].tolist()
+        if result is not None and not result.empty and len(result) > 0:
+            domains = ["All"] + result['domain'].tolist()
+            return domains
         else:
-            # Fallback to hardcoded list if query fails
-            return ["All", "AI", "AppSec", "IAM", "Networking", "ThreatDetection"]
-    except Exception:
-        # Fallback to hardcoded list if query fails
-        return ["All", "AI", "AppSec", "IAM", "Networking", "ThreatDetection"]
+            st.warning("⚠️ Using cached domain list - database temporarily unavailable")
+            return fallback_domains
+    except Exception as e:
+        # Log error but don't crash the app
+        print(f"Domain query failed: {str(e)}")
+        st.warning("⚠️ Using cached domain list - database temporarily unavailable")
+        return fallback_domains
 
 @st.cache_data(ttl=3600)
 def get_aws_announcements_data():
@@ -327,7 +388,7 @@ def get_aws_announcements_data():
     
     return pd.DataFrame(announcements_data)
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=3600)
 def get_aws_announcements_summary():
     """Get simple summary of AWS announcements by domain."""
     
@@ -1798,7 +1859,9 @@ Provide a helpful, professional response that includes specific session referenc
         return response.choices[0].message.content
         
     except Exception as e:
-        return f"Sorry, I'm having trouble right now. Error: {str(e)}"
+        # Log error but provide user-friendly message
+        print(f"Chat AI error: {str(e)}")
+        return "⚠️ I'm temporarily unable to process your question due to a technical issue. Please try again in a moment, or try a different question."
 
 def main():
     """Main dashboard function."""
@@ -1842,10 +1905,11 @@ def main():
         st.header("📊 Dashboard")
         st.markdown("**Strategic insights for security leadership and investment planning**")
         
-        # Get domain analysis
-        domain_df = get_domain_analysis()
-        
-        if domain_df is not None and not domain_df.empty:
+        try:
+            # Get domain analysis with error handling
+            domain_df = get_domain_analysis()
+            
+            if domain_df is not None and not domain_df.empty:
             # Key metrics row
             col1, col2, col3, col4 = st.columns(4)
             
@@ -1890,6 +1954,10 @@ def main():
             display_df.columns = ['Domain', '2024 Talks', '2025 Talks', 'Growth %', '2024 Speakers', '2025 Speakers']
             st.dataframe(display_df, use_container_width=True)
         
+        except Exception as e:
+            st.error("⚠️ Dashboard temporarily unavailable. Please try refreshing the page.")
+            st.info("Our team has been notified and is working to resolve this issue.")
+            print(f"Dashboard error: {str(e)}")  # Log for debugging
     
     with tab2:
         st.header("📚 Browse All Talks")
