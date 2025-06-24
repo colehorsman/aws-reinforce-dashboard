@@ -2147,8 +2147,21 @@ def main():
             st.subheader("📊 Domain Performance Summary")
             display_df = domain_df.copy()
             display_df['Growth %'] = display_df['growth_percentage'].apply(lambda x: f"{x:+.1f}%" if pd.notna(x) else "N/A")
-            display_df = display_df[['domain', 'talks_2024', 'talks_2025', 'Growth %', 'speakers_2024', 'speakers_2025']]
-            display_df.columns = ['Domain', '2024 Talks', '2025 Talks', 'Growth %', '2024 Speakers', '2025 Speakers']
+            
+            # Debug: Check what columns we actually have
+            available_columns = display_df.columns.tolist()
+            st.write("Debug - Available columns:", available_columns)
+            
+            # Select only the columns that exist
+            desired_columns = ['domain', 'talks_2024', 'talks_2025', 'Growth %']
+            if 'speakers_2024' in available_columns and 'speakers_2025' in available_columns:
+                desired_columns.extend(['speakers_2024', 'speakers_2025'])
+                column_names = ['Domain', '2024 Talks', '2025 Talks', 'Growth %', '2024 Speakers', '2025 Speakers']
+            else:
+                column_names = ['Domain', '2024 Talks', '2025 Talks', 'Growth %']
+            
+            display_df = display_df[desired_columns]
+            display_df.columns = column_names
             st.dataframe(display_df, use_container_width=True)
         
         except Exception as e:
