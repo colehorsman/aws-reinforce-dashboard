@@ -1172,6 +1172,14 @@ def modern_sidebar_chatbot():
                     import time
                     st.session_state.rate_limit_requests.append(time.time())
                     
+                    # Track AI chatbot query
+                    track_event('ai_chat_query', {
+                        'query_length': len(sanitized_input),
+                        'has_comparison': 'compare' in sanitized_input.lower() or 'vs' in sanitized_input.lower(),
+                        'mentions_ai': 'ai' in sanitized_input.lower() or 'artificial intelligence' in sanitized_input.lower(),
+                        'mentions_iam': 'iam' in sanitized_input.lower() or 'identity' in sanitized_input.lower()
+                    })
+                    
                     # Add user message to history
                     st.session_state.chat_history.append({"role": "user", "content": sanitized_input})
                     
@@ -2140,6 +2148,11 @@ def main():
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["📈 Executive Summary", "📚 Browse Talks", "🚀 re:Inforce Announcements", "🔮 2026 Predictions", "📋 Data Validation"])
     
     with tab1:
+        # Track Executive Summary tab view
+        track_event('page_view', {
+            'page_title': 'Executive Summary',
+            'tab_name': 'executive_summary'
+        })
         st.header("📊 Dashboard")
         st.markdown("**Strategic insights for security leadership and investment planning**")
         
@@ -2150,35 +2163,35 @@ def main():
                 summary_stats = get_executive_summary()
             
             if domain_df is not None and not domain_df.empty:
-            # Key metrics row - responsive columns
-            col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
-            
-            with col1:
-                total_2024 = domain_df['talks_2024'].sum()
-                st.metric("2024 Total", total_2024)
-            
-            with col2:
-                total_2025 = domain_df['talks_2025'].sum()
-                growth = ((total_2025 - total_2024) / total_2024 * 100) if total_2024 > 0 else 0
-                st.metric("2025 Total", total_2025, f"{growth:+.1f}%")
-            
-            with col3:
-                max_growth = domain_df['growth_percentage'].max()
-                max_domain = domain_df.loc[domain_df['growth_percentage'].idxmax(), 'domain']
-                st.metric("Top Growth", f"{max_domain}", f"{max_growth}%")
-            
-            with col4:
-                total_domains = len(domain_df)
-                st.metric("Security Domains", total_domains)
-            
-            # Executive charts
-            fig_growth, fig_comparison = create_executive_charts(domain_df)
-            
-            col1, col2 = st.columns(2)
-            with col1:
-                st.plotly_chart(fig_growth, use_container_width=True)
-            with col2:
-                st.plotly_chart(fig_comparison, use_container_width=True)
+                # Key metrics row - responsive columns
+                col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+                
+                with col1:
+                    total_2024 = domain_df['talks_2024'].sum()
+                    st.metric("2024 Total", total_2024)
+                
+                with col2:
+                    total_2025 = domain_df['talks_2025'].sum()
+                    growth = ((total_2025 - total_2024) / total_2024 * 100) if total_2024 > 0 else 0
+                    st.metric("2025 Total", total_2025, f"{growth:+.1f}%")
+                
+                with col3:
+                    max_growth = domain_df['growth_percentage'].max()
+                    max_domain = domain_df.loc[domain_df['growth_percentage'].idxmax(), 'domain']
+                    st.metric("Top Growth", f"{max_domain}", f"{max_growth}%")
+                
+                with col4:
+                    total_domains = len(domain_df)
+                    st.metric("Security Domains", total_domains)
+                
+                # Executive charts
+                fig_growth, fig_comparison = create_executive_charts(domain_df)
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.plotly_chart(fig_growth, use_container_width=True)
+                with col2:
+                    st.plotly_chart(fig_comparison, use_container_width=True)
             
             # Strategic insights
             st.subheader("🎯 Strategic Insights")
@@ -2219,6 +2232,11 @@ def main():
             print(f"Dashboard error: {str(e)}")  # Log for debugging
     
     with tab2:
+        # Track Browse Talks tab view
+        track_event('page_view', {
+            'page_title': 'Browse Talks',
+            'tab_name': 'browse_talks'
+        })
         st.header("📚 Browse All Talks")
         st.markdown("Browse and filter all conference talks by year and domain")
         
@@ -2334,6 +2352,11 @@ def main():
         
     
     with tab3:
+        # Track re:Inforce Announcements tab view
+        track_event('page_view', {
+            'page_title': 'reInforce Announcements',
+            'tab_name': 'announcements'
+        })
         st.header("🚀 AWS re:Inforce Announcements")
         st.markdown("**Track AWS security feature announcements and product launches during re:Inforce events**")
         
@@ -2442,6 +2465,11 @@ def main():
         
     
     with tab4:
+        # Track 2026 Predictions tab view
+        track_event('page_view', {
+            'page_title': '2026 Predictions',
+            'tab_name': '2026_predictions'
+        })
         st.header("🔮 AWS re:Inforce 2026 Predictions")
         st.markdown("**Data-driven predictions for AWS re:Inforce 2026 based on 2024-2025 analysis**")
         
@@ -2580,6 +2608,11 @@ def main():
         """)
     
     with tab5:
+        # Track Data Validation tab view
+        track_event('page_view', {
+            'page_title': 'Data Validation',
+            'tab_name': 'data_validation'
+        })
         st.header("📋 Data Validation & Reliability")
         st.markdown("Verify data integrity for executive reporting")
         
