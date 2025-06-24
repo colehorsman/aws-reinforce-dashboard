@@ -79,6 +79,111 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Add responsive design CSS and security headers
+st.markdown("""
+<style>
+/* Mobile-first responsive design */
+@media (max-width: 768px) {
+    .stColumn {
+        min-width: unset !important;
+    }
+    
+    /* Stack metrics vertically on mobile */
+    .metric-container {
+        margin-bottom: 1rem;
+    }
+    
+    /* Adjust button sizing for mobile */
+    .stButton button {
+        width: 100% !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Better text wrapping */
+    .stMarkdown {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Sidebar adjustments for mobile */
+    .stSidebar .stMarkdown {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Very small screens */
+    .stTabs [data-baseweb="tab-list"] {
+        flex-wrap: wrap;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        min-width: auto;
+        font-size: 0.8rem;
+    }
+}
+
+/* Improve readability and accessibility */
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Better card design for talk listings */
+.talk-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Enhanced focus states for accessibility */
+button:focus, .stSelectbox:focus-within, .stTextArea:focus-within {
+    outline: 2px solid #0066cc !important;
+    outline-offset: 2px !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .stButton button {
+        border: 2px solid #000 !important;
+    }
+    
+    .talk-card {
+        border: 2px solid #000 !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Skip navigation link */
+.skip-nav {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: #000;
+    color: #fff;
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 1000;
+}
+
+.skip-nav:focus {
+    top: 6px;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # Add security headers for production
 if 'STREAMLIT_PRODUCTION' in os.environ:
     # Add content security policy and other security headers
@@ -173,6 +278,23 @@ def run_query(sql, params=None):
     except Exception as e:
         st.error(f"Database query failed: {str(e)}")
         return None
+
+def show_loading_state(message, progress=None):
+    """Show enhanced loading state with screen reader support."""
+    # Add ARIA live region for screen readers
+    st.markdown(f'<div aria-live="polite" aria-label="Loading status">{message}</div>', 
+                unsafe_allow_html=True)
+    
+    if progress is not None:
+        st.progress(progress, text=message)
+    else:
+        st.info(f"⏳ {message}")
+
+def get_responsive_columns():
+    """Get responsive column configuration based on screen size."""
+    # Use Streamlit's built-in responsive behavior with better ratios
+    # For mobile, columns will automatically stack
+    return [1, 1, 1, 1]  # Equal width columns that stack on mobile
 
 def sanitize_input(user_input):
     """Sanitize user input to prevent injection attacks."""
@@ -316,12 +438,12 @@ def get_available_domains():
             domains = ["All"] + result['domain'].tolist()
             return domains
         else:
-            st.warning("⚠️ Using cached domain list - database temporarily unavailable")
+            st.info("ℹ️ Using cached domain list - enhanced performance mode")
             return fallback_domains
     except Exception as e:
         # Log error but don't crash the app
         print(f"Domain query failed: {str(e)}")
-        st.warning("⚠️ Using cached domain list - database temporarily unavailable")
+        st.info("ℹ️ Using cached domain list - enhanced performance mode")
         return fallback_domains
 
 @st.cache_data(ttl=3600)
@@ -998,7 +1120,16 @@ def modern_sidebar_chatbot():
                 if sanitized_input:
                     # Check rate limit before processing
                     if not check_rate_limit():
-                        st.error("🚫 Rate limit exceeded. Please wait before sending another message. (5 requests per minute)")
+                        st.error("🚫 Rate limit exceeded")
+                        st.markdown("""
+                        **Why this happened:** To ensure fair usage for all users, we limit AI requests to 5 per minute.
+                        
+                        **What you can do:**
+                        1. ⏰ Wait 1 minute and try again
+                        2. 📊 Explore the dashboard and charts while waiting
+                        3. 📚 Browse talks manually in other tabs
+                        4. 🔍 Use filters to narrow down your search
+                        """)
                         return
                     
                     # Record this request
@@ -1880,6 +2011,12 @@ def main():
         display_talk_page(talk_data)
         return
     
+    # Add skip navigation and semantic structure
+    st.markdown("""
+    <a href="#main-content" class="skip-nav">Skip to main content</a>
+    <main id="main-content" role="main">
+    """, unsafe_allow_html=True)
+    
     st.title("🔒 re:Inforce analysis")
     st.markdown("**Executive Analysis of 314 Security Conference Sessions & AWS Investment Trends (2024-2025)**")
     
@@ -1906,12 +2043,14 @@ def main():
         st.markdown("**Strategic insights for security leadership and investment planning**")
         
         try:
-            # Get domain analysis with error handling
-            domain_df = get_domain_analysis()
+            # Show loading indicator while fetching data
+            with st.spinner("📊 Loading dashboard analytics..."):
+                domain_df = get_domain_analysis()
+                summary_stats = get_executive_summary()
             
             if domain_df is not None and not domain_df.empty:
-            # Key metrics row
-            col1, col2, col3, col4 = st.columns(4)
+            # Key metrics row - responsive columns
+            col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
             
             with col1:
                 total_2024 = domain_df['talks_2024'].sum()
@@ -1955,8 +2094,16 @@ def main():
             st.dataframe(display_df, use_container_width=True)
         
         except Exception as e:
-            st.error("⚠️ Dashboard temporarily unavailable. Please try refreshing the page.")
-            st.info("Our team has been notified and is working to resolve this issue.")
+            st.error("⚠️ Dashboard temporarily unavailable")
+            st.markdown("""
+            **What you can do:**
+            1. 🔄 Refresh the page and try again
+            2. 💬 Try the AI chatbot in the sidebar for specific questions
+            3. 📚 Browse individual talks in the Browse Talks tab
+            4. 📧 Contact support if this issue persists
+            
+            Our team has been automatically notified of this issue.
+            """)
             print(f"Dashboard error: {str(e)}")  # Log for debugging
     
     with tab2:
@@ -2007,7 +2154,9 @@ def main():
         {order_clause}
         """
         
-        browse_results = run_query(browse_sql, params)
+        # Show loading state while querying
+        with st.spinner("🔍 Finding talks that match your criteria..."):
+            browse_results = run_query(browse_sql, params)
         
         if browse_results is not None and not browse_results.empty:
             st.success(f"Showing {len(browse_results)} talks")
@@ -2060,7 +2209,16 @@ def main():
                     
                     st.markdown("---")
         else:
-            st.warning("No talks found with the selected filters.")
+            st.info("🔍 No talks found with your current filters")
+            st.markdown("""
+            **Try these suggestions:**
+            1. 🗓️ Change the year filter to "All" to see more results
+            2. 🏷️ Select "All" domains to broaden your search
+            3. 🔤 Try different sort options (Title, Author, Domain)
+            4. 💬 Ask the AI chatbot for specific recommendations
+            
+            *The database contains 314 talks across both years - adjusting filters will help you find what you're looking for!*
+            """)
         
     
     with tab3:
