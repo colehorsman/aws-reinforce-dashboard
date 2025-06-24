@@ -4,6 +4,7 @@ Executive CISO Dashboard with Advanced Analytics and Search-to-Chart capabilitie
 """
 
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -98,7 +99,7 @@ st.markdown(f"""
 # Add Google Analytics 4 tracking with better placement
 if GOOGLE_ANALYTICS_ID:
     # Method 1: Try to inject into head
-    st.components.v1.html(f"""
+    components.html(f"""
     <script async src="https://www.googletagmanager.com/gtag/js?id={GOOGLE_ANALYTICS_ID}"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
