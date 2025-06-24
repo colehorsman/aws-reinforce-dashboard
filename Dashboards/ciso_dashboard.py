@@ -84,10 +84,21 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Add Google Analytics 4 tracking
+# Inject Google Analytics immediately after page config
+st.markdown(f"""
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1ZZVYPJG7N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', 'G-1ZZVYPJG7N');
+</script>
+""", unsafe_allow_html=True)
+
+# Add Google Analytics 4 tracking with better placement
 if GOOGLE_ANALYTICS_ID:
-    st.markdown(f"""
-    <!-- Google tag (gtag.js) -->
+    # Method 1: Try to inject into head
+    st.components.v1.html(f"""
     <script async src="https://www.googletagmanager.com/gtag/js?id={GOOGLE_ANALYTICS_ID}"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -97,8 +108,25 @@ if GOOGLE_ANALYTICS_ID:
         'anonymize_ip': true,
         'cookie_flags': 'SameSite=Strict;Secure'
       }});
+      console.log('Google Analytics loaded with ID: {GOOGLE_ANALYTICS_ID}');
+    </script>
+    """, height=0)
+    
+    # Method 2: Also try with st.markdown for fallback
+    st.markdown(f"""
+    <script async src="https://www.googletagmanager.com/gtag/js?id={GOOGLE_ANALYTICS_ID}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){{dataLayer.push(arguments);}}
+      gtag('js', new Date());
+      gtag('config', '{GOOGLE_ANALYTICS_ID}');
+      console.log('GA fallback loaded');
     </script>
     """, unsafe_allow_html=True)
+    
+    # Debug: Show GA status in development
+    if os.getenv("STREAMLIT_DEBUG"):
+        st.sidebar.success(f"✅ GA4 Active: {GOOGLE_ANALYTICS_ID}")
 
 # Add responsive design CSS and security headers
 st.markdown("""
