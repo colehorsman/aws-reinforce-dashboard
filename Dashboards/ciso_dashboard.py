@@ -1101,7 +1101,7 @@ def chat_with_ai(user_question):
                 context += f"- {talk['title']} ({talk['year']}): {talk['summary'][:200]}...\n"
         
         # Check for comprehensive summary requests
-        if any(phrase in question_lower for phrase in ['summary of reinforce', 'overview of reinforce', 'reinforce summary', 'what happened at reinforce', 'summarize reinforce']):
+        if any(phrase in question_lower for phrase in ['summary of re:inforce', 'overview of re:inforce', 're:inforce summary', 'what happened at re:inforce', 'summarize re:inforce']):
             year_match = re.search(r'(2024|2025)', question_lower)
             summary_year = int(year_match.group(1)) if year_match else 2025  # Default to 2025
             
@@ -1738,28 +1738,6 @@ def main():
     st.title("🔒 re:Inforce analysis")
     st.markdown("**Executive Analysis of 314 Security Conference Sessions & AWS Investment Trends (2024-2025)**")
     
-    # Quick navigation bar
-    st.markdown("---")
-    nav_col1, nav_col2, nav_col3, nav_col4 = st.columns(4)
-    
-    with nav_col1:
-        if st.button("📈 Dashboard", use_container_width=True, key="nav_dashboard"):
-            st.session_state.current_tab = 0
-    
-    with nav_col2:
-        if st.button("📚 Browse", use_container_width=True, key="nav_browse"):
-            st.session_state.current_tab = 1
-    
-    with nav_col3:
-        if st.button("🚀 Announcements", use_container_width=True, key="nav_announcements"):
-            st.session_state.current_tab = 2
-    
-    with nav_col4:
-        if st.button("🔮 Predictions", use_container_width=True, key="nav_predictions"):
-            st.session_state.current_tab = 3
-    
-    st.markdown("---")
-    
     # Sidebar
     st.sidebar.header("📈 Key Metrics")
     
@@ -1776,7 +1754,7 @@ def main():
     modern_sidebar_chatbot()
     
     # Main tabs - AI chatbot now integrated in sidebar
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["📈 Executive Summary", "📚 Browse Talks", "🚀 Reinforce Announcements", "🔮 2026 Predictions", "📋 Data Validation"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["📈 Executive Summary", "📚 Browse Talks", "🚀 re:Inforce Announcements", "🔮 2026 Predictions", "📋 Data Validation"])
     
     with tab1:
         st.header("📊 Dashboard")
