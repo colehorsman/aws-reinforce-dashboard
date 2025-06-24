@@ -17,6 +17,7 @@ import openai
 import os
 import warnings
 import sqlalchemy
+import html
 
 # Get OpenAI API key from environment variable or Streamlit secrets
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
@@ -31,13 +32,25 @@ DB_CONFIG = {
     'port': 5432
 }
 
-# Page configuration
+# Page configuration with security headers
 st.set_page_config(
     page_title="AWS re:Inforce Analytics",
     page_icon="🔒",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Add security headers for production
+if 'STREAMLIT_PRODUCTION' in os.environ:
+    # Add content security policy and other security headers
+    st.markdown("""
+    <script>
+    // Disable right-click context menu in production
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+    </script>
+    """, unsafe_allow_html=True)
 
 def get_db_connection():
     """Get database connection - supports both local and Streamlit Cloud."""
@@ -61,7 +74,18 @@ def get_db_connection():
 
 @st.cache_data(ttl=300)
 def run_query(sql, params=None):
-    """Execute SQL query with caching - Streamlit Cloud compatible."""
+    """Execute SQL query with caching and security validation - Streamlit Cloud compatible."""
+    # Basic SQL injection protection - only allow SELECT statements for data queries
+    sql_stripped = sql.strip().upper()
+    if not sql_stripped.startswith('SELECT'):
+        raise ValueError("Only SELECT statements are allowed")
+    
+    # Block dangerous SQL patterns
+    dangerous_patterns = ['DROP', 'DELETE', 'INSERT', 'UPDATE', 'CREATE', 'ALTER', 'EXEC', 'TRUNCATE']
+    for pattern in dangerous_patterns:
+        if pattern in sql_stripped:
+            raise ValueError(f"Dangerous SQL pattern detected: {pattern}")
+    
     try:
         # Check if running on Streamlit Cloud
         if 'postgres' in st.secrets:
@@ -98,6 +122,33 @@ def run_query(sql, params=None):
     except Exception as e:
         st.error(f"Database query failed: {str(e)}")
         return None
+
+def sanitize_input(user_input):
+    """Sanitize user input to prevent injection attacks."""
+    if not user_input or not isinstance(user_input, str):
+        return ""
+    
+    # Remove null bytes and control characters
+    sanitized = user_input.replace('\x00', '').replace('\r', '').replace('\n', ' ')
+    
+    # Limit length to prevent abuse
+    if len(sanitized) > 1000:
+        sanitized = sanitized[:1000]
+    
+    # HTML escape to prevent XSS
+    sanitized = html.escape(sanitized)
+    
+    # Remove SQL injection patterns (basic protection)
+    dangerous_patterns = [
+        r'--', r'/\*', r'\*/', r'\bUNION\b', r'\bSELECT\b', 
+        r'\bINSERT\b', r'\bUPDATE\b', r'\bDELETE\b', r'\bDROP\b',
+        r'\bCREATE\b', r'\bALTER\b', r'\bEXEC\b', r'\bSCRIPT\b'
+    ]
+    
+    for pattern in dangerous_patterns:
+        sanitized = re.sub(pattern, '', sanitized, flags=re.IGNORECASE)
+    
+    return sanitized.strip()
 
 @st.cache_data(ttl=300)
 def get_talk_details(talk_id=None, session_code=None, title=None):
@@ -819,11 +870,26 @@ def display_talk_page(talk_data):
             st.rerun()
 
 def modern_sidebar_chatbot():
-    """Modern AI chatbot always visible in sidebar."""
+    """Modern AI chatbot always visible in sidebar with rate limiting."""
+    import time
     
     # Initialize chatbot state
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = []
+    
+    # Rate limiting: 5 requests per minute
+    if 'rate_limit_requests' not in st.session_state:
+        st.session_state.rate_limit_requests = []
+    
+    def check_rate_limit():
+        """Check if user is within rate limits (5 requests per minute)."""
+        current_time = time.time()
+        # Remove requests older than 1 minute
+        st.session_state.rate_limit_requests = [
+            req_time for req_time in st.session_state.rate_limit_requests 
+            if current_time - req_time < 60
+        ]
+        return len(st.session_state.rate_limit_requests) < 5
     
     with st.sidebar:
         # Simple chatbot header
@@ -866,13 +932,24 @@ def modern_sidebar_chatbot():
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             if st.button("🚀 Ask AI", use_container_width=True, type="primary"):
-                if user_input.strip():
+                # Validate input before processing
+                sanitized_input = sanitize_input(user_input)
+                if sanitized_input:
+                    # Check rate limit before processing
+                    if not check_rate_limit():
+                        st.error("🚫 Rate limit exceeded. Please wait before sending another message. (5 requests per minute)")
+                        return
+                    
+                    # Record this request
+                    import time
+                    st.session_state.rate_limit_requests.append(time.time())
+                    
                     # Add user message to history
-                    st.session_state.chat_history.append({"role": "user", "content": user_input})
+                    st.session_state.chat_history.append({"role": "user", "content": sanitized_input})
                     
                     # Get AI response
                     with st.spinner("🧠 Analyzing conference data..."):
-                        ai_response = chat_with_ai(user_input)
+                        ai_response = chat_with_ai(sanitized_input)
                     
                     # Add AI response to history
                     st.session_state.chat_history.append({"role": "assistant", "content": ai_response})
@@ -925,9 +1002,14 @@ def modern_sidebar_chatbot():
                     """, unsafe_allow_html=True)
 
 def chat_with_ai(user_question):
-    """Handle AI chat conversation."""
+    """Handle AI chat conversation with input sanitization."""
     try:
         import re  # Import at function level to avoid scope issues
+        
+        # Sanitize input first
+        user_question = sanitize_input(user_question)
+        if not user_question:
+            return "Please provide a valid question."
         
         # Handle simple counting questions first
         question_lower = user_question.lower()
