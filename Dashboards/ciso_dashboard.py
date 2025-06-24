@@ -1808,24 +1808,6 @@ def main():
             display_df.columns = ['Domain', '2024 Talks', '2025 Talks', 'Growth %', '2024 Speakers', '2025 Speakers']
             st.dataframe(display_df, use_container_width=True)
         
-        # Footer navigation
-        st.markdown("---")
-        foot_col1, foot_col2, foot_col3, foot_col4 = st.columns(4)
-        with foot_col1:
-            if st.button("📚 Browse Talks →", use_container_width=True, key="dash_to_browse"):
-                st.session_state.current_tab = 1
-                st.rerun()
-        with foot_col2:
-            if st.button("🚀 View Announcements →", use_container_width=True, key="dash_to_announce"):
-                st.session_state.current_tab = 2
-                st.rerun()
-        with foot_col3:
-            if st.button("🔮 2026 Predictions →", use_container_width=True, key="dash_to_predict"):
-                st.session_state.current_tab = 3
-                st.rerun()
-        with foot_col4:
-            if st.button("🔝 Back to Top", use_container_width=True, key="dash_to_top"):
-                st.rerun()
     
     with tab2:
         st.header("📚 Browse All Talks")
@@ -1930,24 +1912,6 @@ def main():
         else:
             st.warning("No talks found with the selected filters.")
         
-        # Footer navigation for Browse Talks
-        st.markdown("---")
-        browse_foot1, browse_foot2, browse_foot3, browse_foot4 = st.columns(4)
-        with browse_foot1:
-            if st.button("📈 ← Dashboard", use_container_width=True, key="browse_to_dash"):
-                st.session_state.current_tab = 0
-                st.rerun()
-        with browse_foot2:
-            if st.button("🚀 Announcements →", use_container_width=True, key="browse_to_announce"):
-                st.session_state.current_tab = 2
-                st.rerun()
-        with browse_foot3:
-            if st.button("🔮 Predictions →", use_container_width=True, key="browse_to_predict"):
-                st.session_state.current_tab = 3
-                st.rerun()
-        with browse_foot4:
-            if st.button("🔝 Back to Top", use_container_width=True, key="browse_to_top"):
-                st.rerun()
     
     with tab3:
         st.header("🚀 AWS re:Inforce Announcements")
@@ -2056,24 +2020,6 @@ def main():
                         st.markdown(f"[📖 Official AWS Blog]({row['link']})")
                     st.markdown("---")
         
-        # Footer navigation for Announcements
-        st.markdown("---")
-        announce_foot1, announce_foot2, announce_foot3, announce_foot4 = st.columns(4)
-        with announce_foot1:
-            if st.button("📈 ← Dashboard", use_container_width=True, key="announce_to_dash"):
-                st.session_state.current_tab = 0
-                st.rerun()
-        with announce_foot2:
-            if st.button("📚 ← Browse Talks", use_container_width=True, key="announce_to_browse"):
-                st.session_state.current_tab = 1
-                st.rerun()
-        with announce_foot3:
-            if st.button("🔮 Predictions →", use_container_width=True, key="announce_to_predict"):
-                st.session_state.current_tab = 3
-                st.rerun()
-        with announce_foot4:
-            if st.button("🔝 Back to Top", use_container_width=True, key="announce_to_top"):
-                st.rerun()
     
     with tab4:
         st.header("🔮 AWS re:Inforce 2026 Predictions")
