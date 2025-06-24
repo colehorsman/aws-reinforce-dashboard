@@ -1009,8 +1009,11 @@ def display_talk_page(talk_data):
         st.subheader("🎯 Key Points")
         # Handle both string format (converted from array) and array format
         if isinstance(talk['key_points'], str):
-            # Split on newlines if it's a string
-            points = talk['key_points'].split('\n')
+            # Split on double newlines (enhanced content format) or single newlines
+            if '\n\n' in talk['key_points']:
+                points = talk['key_points'].split('\n\n')
+            else:
+                points = talk['key_points'].split('\n')
             for point in points:
                 if point.strip():  # Only show non-empty points
                     st.markdown(f"• {point.strip()}")
@@ -1025,8 +1028,11 @@ def display_talk_page(talk_data):
         st.subheader("⚙️ Technical Details")
         # Handle both string format (converted from array) and array format
         if isinstance(talk['technical_details'], str):
-            # Split on newlines if it's a string
-            details = talk['technical_details'].split('\n')
+            # Split on double newlines (enhanced content format) or single newlines
+            if '\n\n' in talk['technical_details']:
+                details = talk['technical_details'].split('\n\n')
+            else:
+                details = talk['technical_details'].split('\n')
             for detail in details:
                 if detail.strip():  # Only show non-empty details
                     st.markdown(f"• {detail.strip()}")
